@@ -8,7 +8,7 @@ function PetDetailPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:8080/api/pets`, {
+    fetch(`http://localhost:8080/api/pets/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -29,7 +29,7 @@ function PetDetailPage() {
     <div style={styles.container}>
       <div style={styles.header}>
         <img
-          src={pet.avatarUrl || "../assets/P1.png"}
+          src={pet.avatarUrl || "/default-avatar.png"}
           alt={pet.name}
           style={styles.avatar}
         />
