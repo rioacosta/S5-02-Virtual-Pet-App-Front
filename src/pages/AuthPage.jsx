@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { login, register } from "../services/authService";
-import backgroundImage from "../assets/the-temple.png"; // Asegúrate de que el nombre del archivo sea correcto
+import backgroundImage from "../assets/the-temple.png";
+import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
+import { isTokenExpired } from "../utils/authUtils";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,16 +21,26 @@ export default function AuthPage() {
     try {
       if (isLogin) {
         const data = await login(form.username, form.password);
-        localStorage.setItem("token", data.token);
-        alert("Login exitoso"); //quizas hay que quitarlo
-        window.location.href = "/dashboard"; // Aquí puedes redirigir al dashboard
+        const token = data.token;
+
+        if (!token || isTokenExpired(token)) {
+          throw new Error("Token inválido o expirado");
+        }
+
+            const decoded = jwtDecode(token);
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", decoded.userId || decoded.id || decoded.sub); // compatible con varios backends
+
+        toast.success("Login exitoso");
+        window.location.href = "/dashboard";
       } else {
         await register(form);
-        alert("Registro exitoso. Ahora puedes iniciar sesión.");
+        toast.success("Registro exitoso. Ahora puedes iniciar sesión.");
         setIsLogin(true);
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Ocurrió un error");
     }
   };
 
@@ -40,7 +53,7 @@ export default function AuthPage() {
         height: "100vh",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       <div
@@ -50,11 +63,14 @@ export default function AuthPage() {
           borderRadius: "12px",
           width: "100%",
           maxWidth: 400,
-          textAlign: "center"
+          textAlign: "center",
         }}
       >
         <h2>{isLogin ? "Iniciar sesión" : "Registrarse"}</h2>
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+        >
           <input
             name="username"
             placeholder="Usuario"
@@ -84,7 +100,15 @@ export default function AuthPage() {
         {error && <p style={{ color: "red" }}>{error}</p>}
         <p>
           {isLogin ? "¿No tienes cuenta?" : "¿Ya tienes cuenta?"}{" "}
-          <button onClick={() => setIsLogin(!isLogin)} style={{ background: "none", border: "none", color: "blue", cursor: "pointer" }}>
+          <button
+            onClick={() => setIsLogin(!isLogin)}
+            style={{
+              background: "none",
+              border: "none",
+              color: "blue",
+              cursor: "pointer",
+            }}
+          >
             {isLogin ? "Registrarse" : "Iniciar sesión"}
           </button>
         </p>

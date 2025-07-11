@@ -1,5 +1,7 @@
-// src/App.jsx
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
 import CreatePetPage from './pages/CreatePetPage';
@@ -10,7 +12,8 @@ function App() {
   const isAuthenticated = !!localStorage.getItem('token');
 
   return (
-    <Router>
+    <>
+      <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         <Route
           path="/"
@@ -33,7 +36,7 @@ function App() {
           element={isAuthenticated ? <MeditationSessionPage /> : <Navigate to="/" />}
         />
       </Routes>
-    </Router>
+    </>
   );
 }
 

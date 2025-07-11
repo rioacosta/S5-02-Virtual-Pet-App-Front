@@ -33,6 +33,7 @@ export async function register(userData) {
     console.warn("Respuesta no es JSON válido:", text);
     return {};
   }
+
 }
 
 

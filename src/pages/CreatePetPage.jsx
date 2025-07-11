@@ -1,15 +1,17 @@
 // src/pages/CreatePetPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function CreatePetPage() {
+const CreatePetPage = () => {
   const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
   const [petName, setPetName] = useState('');
   const [selectedPet, setSelectedPet] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  // Aquí defines las rutas a tus imágenes de mascotas
   const availablePets = [
     { id: 1, name: "Luli", image: "/src/assets/Luli.png" },
     { id: 2, name: "Lele", image: "/src/assets/Lele.png" },
@@ -36,7 +38,6 @@ function CreatePetPage() {
     try {
       const token = localStorage.getItem('token');
 
-      // Simulamos una petición a la API
       const response = await fetch('http://localhost:8080/api/pets', {
         method: 'POST',
         headers: {
@@ -45,8 +46,8 @@ function CreatePetPage() {
         },
         body: JSON.stringify({
           name: petName,
-          avatarUrl: selectedPet.image,
-          type: selectedPet.name
+          avatar: selectedPet.image,
+          ownerId: userId
         })
       });
 
@@ -54,12 +55,13 @@ function CreatePetPage() {
         throw new Error('Error al crear la mascota');
       }
 
-      // Redirigir al dashboard después de crear
+      toast.success("🐾 ¡Mascota creada exitosamente!");
       navigate('/dashboard');
 
     } catch (err) {
       console.error('Error:', err);
-      setError('Hubo un problema al crear tu mascota. Intenta nuevamente.');
+      toast.error("⚠️ Hubo un problema al crear tu mascota");
+      setError('Error al crear la mascota');
     } finally {
       setIsSubmitting(false);
     }
@@ -130,7 +132,7 @@ function CreatePetPage() {
       </div>
     </div>
   );
-}
+};
 
 // Estilos mejorados
 const styles = {
