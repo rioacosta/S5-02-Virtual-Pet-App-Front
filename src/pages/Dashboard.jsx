@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/the-temple.png";
+import { jwtDecode } from "jwt-decode";
 
 export default function Dashboard() {
   const [pets, setPets] = useState([]);
   const [totalMinutes, setTotalMinutes] = useState(0);
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -15,15 +17,24 @@ export default function Dashboard() {
       return;
     }
 
-    // Obtener datos del usuario
-    fetch("http://localhost:8080/api/user", {
+    // ✅ Decodificar token y guardar nombre
+    const decoded = jwtDecode(token);
+    console.log("Usuario desde token:", decoded);
+    setUserData({ name: decoded.userId });
+
+    // ✅ Obtener datos del backend (opcional si necesitas más info)
+    fetch("http://localhost:8080/api/v1/users/me", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
-      .then(data => setUserData(data))
+      .then(data => {
+        console.log("Datos del backend:", data);
+        setUserData(data);
+      })
       .catch(err => console.error("Error al cargar usuario:", err));
 
-    // Obtener mascotas
+
+    // ✅ Obtener mascotas
     fetch("http://localhost:8080/api/pets", {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -35,6 +46,7 @@ export default function Dashboard() {
       })
       .catch(err => console.error("Error al cargar mascotas:", err));
   }, [navigate]);
+
 
   return (
     <div style={{
@@ -57,7 +69,7 @@ export default function Dashboard() {
       }}/>
 
       <div style={{ position: "relative", zIndex: 1 }}>
-        <h1>Bienvenido {userData?.name || ''} 🧘</h1>
+        <h1>Bienvenido {userData?.username || ''} 🧘</h1>
 
         {/* Contador de meditación */}
         <div style={styles.meditationCounter}>
