@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import CreatePetPage from './pages/CreatePetPage';
 import PetDetailPage from './pages/PetDetailPage';
 import MeditationSessionPage from './pages/MeditationSessionPage';
@@ -22,6 +23,10 @@ function App() {
         <Route
           path="/dashboard"
           element={isAuthenticated ? <Dashboard /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/admin"
+          element={isAuthenticated ? <AdminDashboard /> : <Navigate to="/" />}
         />
         <Route
           path="/create-pet"

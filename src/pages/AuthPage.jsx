@@ -27,14 +27,22 @@ export default function AuthPage() {
           throw new Error("Token inválido o expirado");
         }
 
-            const decoded = jwtDecode(token);
+        const decoded = jwtDecode(token);
+        const roles = decoded.roles || [];
 
         localStorage.setItem("token", token);
-        localStorage.setItem("userId", decoded.userId || decoded.id || decoded.sub); // compatible con varios backends
+        localStorage.setItem("userId", decoded.userId || decoded.id || decoded.sub);
+        localStorage.setItem("roles", JSON.stringify(roles));
 
         toast.success("Login exitoso");
-        window.location.href = "/dashboard";
-      } else {
+
+        // 🔮 Redirige según el rol
+        if (Array.isArray(roles) && roles.includes("ROLE_ADMIN")) {
+          window.location.href = "/admin";
+        } else {
+          window.location.href = "/dashboard";
+        }
+        } else {
         await register(form);
         toast.success("Registro exitoso. Ahora puedes iniciar sesión.");
         setIsLogin(true);
