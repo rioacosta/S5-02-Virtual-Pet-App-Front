@@ -36,12 +36,37 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("roles");
+    localStorage.setItem("loggedOut", "true"); // ✅ Marca la salida
+    navigate("/");
+  };
+
   return (
-    <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover", backgroundPosition: "center", minHeight: "100vh", padding: "2rem", position: "relative" }}>
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(255,255,255,0.85)", zIndex: 0 }}/>
+    <div style={{
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      minHeight: "100vh",
+      padding: "2rem",
+      position: "relative"
+    }}>
+      <div style={{
+        position: "absolute",
+        top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: "rgba(255,255,255,0.85)",
+        zIndex: 0
+      }}/>
+
       <div style={{ position: "relative", zIndex: 1 }}>
         <h1>Panel de Administración 🧘‍♀️🔐</h1>
         <p>Usuarios registrados y sus mascotas</p>
+
+        <button onClick={handleLogout} style={cardStyles.logoutButton}>
+          🔒 Cerrar sesión
+        </button>
 
         {users.map(user => (
           <div key={user.id} style={cardStyles.userCard}>
@@ -114,6 +139,16 @@ const cardStyles = {
     color: "white",
     border: "none",
     borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: "bold"
+  },
+  logoutButton: {
+    marginBottom: "2rem",
+    padding: "10px 20px",
+    backgroundColor: "#d9534f",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
     cursor: "pointer",
     fontWeight: "bold"
   }

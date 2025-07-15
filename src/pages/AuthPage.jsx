@@ -1,14 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { login, register } from "../services/authService";
 import backgroundImage from "../assets/the-temple.png";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import { isTokenExpired } from "../utils/authUtils";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState("");
+  const [logoutMessage, setLogoutMessage] = useState("");
+  const [loggedOutUser, setLoggedOutUser] = useState("");
+  const navigate = useNavigate();
+
+useEffect(() => {
+  const logoutFlag = localStorage.getItem("loggedOut");
+  const lastUser = localStorage.getItem("userId");
+
+  if (logoutFlag === "true") {
+    // Evita ejecución duplicada
+    localStorage.setItem("loggedOut", "pending"); // ⛔ Temporiza el estado
+
+    setTimeout(() => {
+      toast.info(`Hasta pronto, ${lastUser || "usuario"} 🌿 Has cerrado sesión con serenidad 🧘`, {
+        position: "top-right",
+        autoClose: 5000,
+        theme: "light"
+      });
+
+      localStorage.removeItem("loggedOut");
+      localStorage.removeItem("userId");
+    }, 100);
+  }
+}, []);
+
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -36,13 +63,14 @@ export default function AuthPage() {
 
         toast.success("Login exitoso");
 
-        // 🔮 Redirige según el rol
-        if (Array.isArray(roles) && roles.includes("ROLE_ADMIN")) {
-          window.location.href = "/admin";
-        } else {
-          window.location.href = "/dashboard";
-        }
-        } else {
+        setTimeout(() => {
+          if (Array.isArray(roles) && roles.includes("ROLE_ADMIN")) {
+            navigate("/admin");
+          } else {
+            navigate("/dashboard");
+          }
+        }, 1000); // ⏳ Espera 1 segundo antes de navegar
+      } else {
         await register(form);
         toast.success("Registro exitoso. Ahora puedes iniciar sesión.");
         setIsLogin(true);
@@ -61,7 +89,7 @@ export default function AuthPage() {
         height: "100vh",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "center"
       }}
     >
       <div
@@ -71,10 +99,29 @@ export default function AuthPage() {
           borderRadius: "12px",
           width: "100%",
           maxWidth: 400,
-          textAlign: "center",
+          textAlign: "center"
         }}
       >
         <h2>{isLogin ? "Iniciar sesión" : "Registrarse"}</h2>
+
+        {logoutMessage && (
+          <div
+            style={{
+              background: "#dff0d8",
+              color: "#3c763d",
+              padding: "1rem",
+              borderRadius: "8px",
+              marginBottom: "1rem",
+              fontWeight: "bold",
+              textAlign: "center",
+              opacity: logoutMessage ? 1 : 0,
+              transition: "opacity 0.6s ease-in-out"
+            }}
+          >
+            {logoutMessage}
+          </div>
+        )}
+
         <form
           onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
@@ -105,7 +152,9 @@ export default function AuthPage() {
           />
           <button type="submit">{isLogin ? "Entrar" : "Registrarse"}</button>
         </form>
+
         {error && <p style={{ color: "red" }}>{error}</p>}
+
         <p>
           {isLogin ? "¿No tienes cuenta?" : "¿Ya tienes cuenta?"}{" "}
           <button
@@ -114,7 +163,7 @@ export default function AuthPage() {
               background: "none",
               border: "none",
               color: "blue",
-              cursor: "pointer",
+              cursor: "pointer"
             }}
           >
             {isLogin ? "Registrarse" : "Iniciar sesión"}

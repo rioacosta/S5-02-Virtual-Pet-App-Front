@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/the-temple.png";
 import { jwtDecode } from "jwt-decode";
+import { isTokenExpired } from "../utils/authUtils";
 
 export default function Dashboard() {
   const [pets, setPets] = useState([]);
@@ -12,10 +13,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/");
-      return;
-    }
+    if (!token || isTokenExpired(token)) {
+        const userId = localStorage.getItem("userId") || "usuario";
+        localStorage.setItem("loggedOut", "true");
+        localStorage.setItem("userId", userId);
+        navigate("/");
+        return;
+      }
 
     // ✅ Decodificar token y guardar nombre
     const decoded = jwtDecode(token);
@@ -35,18 +39,26 @@ export default function Dashboard() {
 
 
     // ✅ Obtener mascotas
-    fetch("http://localhost:8080/api/pets", {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => res.json())
-      .then(data => {
-        setPets(data);
-        const total = data.reduce((sum, pet) => sum + (pet.totalMeditationMinutes || 0), 0);
-        setTotalMinutes(total);
-      })
-      .catch(err => console.error("Error al cargar mascotas:", err));
-  }, [navigate]);
+     fetch("http://localhost:8080/api/pets", {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+          .then(res => res.json())
+          .then(data => {
+            setPets(data);
+            const total = data.reduce((sum, pet) => sum + (pet.totalMeditationMinutes || 0), 0);
+            setTotalMinutes(total);
+          })
+          .catch(err => console.error("Error al cargar mascotas:", err));
+      }, [navigate]);
 
+    const handleLogout = () => {
+        localStorage.setItem("loggedOut", "true");
+        localStorage.setItem("userId", userData?.username || "usuario");
+        localStorage.removeItem("token");
+        localStorage.removeItem("roles");
+        window.location.href = "/";
+
+      };
 
   return (
     <div style={{
@@ -68,9 +80,13 @@ export default function Dashboard() {
         zIndex: 0
       }}/>
 
+
       <div style={{ position: "relative", zIndex: 1 }}>
         <h1>Bienvenido {userData?.username || ''} 🧘</h1>
 
+        <button onClick={handleLogout} style={styles.logoutButton}>
+          🔒 Cerrar sesión
+        </button>
         {/* Contador de meditación */}
         <div style={styles.meditationCounter}>
           <h2>Tiempo Total Meditado</h2>
@@ -124,6 +140,16 @@ const styles = {
     fontWeight: 'bold',
     color: '#6a11cb',
     margin: '0.5rem 0'
+  },
+  logoutButton: {
+    marginBottom: "1.5rem",
+    padding: "10px 20px",
+    backgroundColor: "#d9534f",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontWeight: "bold"
   },
   createButton: {
     padding: "12px 20px",
