@@ -28,11 +28,25 @@ function PetDetailPage() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <img
-          src={pet.avatarUrl || "/default-avatar.png"}
-          alt={pet.name}
-          style={styles.avatar}
-        />
+       <div style={styles.avatarContainer}>
+         {/* Imagen base */}
+         <img
+           src={pet.avatarUrl || "/default-avatar.png"}
+           alt={pet.name}
+           style={styles.avatarBase}
+         />
+
+         {/* Capas de recompensas como accesorios */}
+         {pet.rewards?.map((reward, index) => (
+           <img
+             key={index}
+             src={`/assets/accessories/${reward}.png`} // 💡 Usa carpeta pública
+             alt={reward}
+             style={styles.accessoryLayer}
+             onError={(e) => { e.target.style.display = 'none'; }} // evita error si falta imagen
+           />
+         ))}
+       </div>
         <h1>{pet.name}</h1>
         <Link to={`/meditate/${pet.id}`}>
           <button style={styles.meditateButton}>MEDITAR</button>
@@ -85,6 +99,28 @@ const styles = {
   header: {
     textAlign: 'center',
     marginBottom: '2rem'
+  },
+  avatarContainer: {
+    position: 'relative',
+    width: '150px',
+    height: '150px',
+    margin: '0 auto',
+    marginBottom: '1rem'
+  },
+  avatarBase: {
+    width: '100%',
+    height: '100%',
+    borderRadius: '50%',
+    objectFit: 'cover',
+    border: '5px solid #6a11cb'
+  },
+  accessoryLayer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none' // evita clics sobre el accesorio
   },
   avatar: {
     width: '150px',

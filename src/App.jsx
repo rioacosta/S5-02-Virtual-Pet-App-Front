@@ -25,16 +25,26 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <AuthPage />}
+          element={
+            isAuthenticated
+              ? JSON.parse(localStorage.getItem("roles") || "[]").includes("ROLE_ADMIN")
+                ? <Navigate to="/admin" replace />
+                : <Navigate to="/dashboard" replace />
+              : <AuthPage />
+          }
         />
         <Route
           path="/dashboard"
           element={isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />}
         />
-        <Route
-          path="/admin"
-          element={isAuthenticated ? <AdminDashboard /> : <Navigate to="/" replace />}
-        />
+       <Route
+         path="/admin"
+         element={
+           isAuthenticated && JSON.parse(localStorage.getItem("roles") || "[]").includes("ROLE_ADMIN")
+             ? <AdminDashboard />
+             : <Navigate to="/dashboard" replace />
+         }
+       />
         <Route
           path="/create-pet"
           element={isAuthenticated ? <CreatePetPage /> : <Navigate to="/" replace />}

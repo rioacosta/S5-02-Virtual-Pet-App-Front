@@ -44,11 +44,12 @@ export default function Dashboard() {
         })
           .then(res => res.json())
           .then(data => {
+              console.log("Mascotas desde backend:", data); // 👀 Revisa si avatarUrl existe y cómo se ve
             setPets(data);
             const total = data.reduce((sum, pet) => sum + (pet.totalMeditationMinutes || 0), 0);
             setTotalMinutes(total);
           })
-          .catch(err => console.error("Error al cargar mascotas:", err));
+          .catch(err => console.error("Error al cargar buddy:", err));
       }, [navigate]);
 
     const handleLogout = () => {
@@ -96,7 +97,7 @@ export default function Dashboard() {
 
         <Link to="/create-pet">
           <button style={styles.createButton}>
-            ➕ Crear nueva mascota
+            ➕ Crear buddy
           </button>
         </Link>
 

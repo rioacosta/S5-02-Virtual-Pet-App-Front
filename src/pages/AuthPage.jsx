@@ -23,7 +23,7 @@ useEffect(() => {
     localStorage.setItem("loggedOut", "pending"); // ⛔ Temporiza el estado
 
     setTimeout(() => {
-      toast.info(`Hasta pronto, ${lastUser || "usuario"} 🌿 Has cerrado sesión con serenidad 🧘`, {
+      toast.info(`Hasta pronto, ${lastUser || "usuario"} 🌿 Sigue respirando 🧘`, {
         position: "top-right",
         autoClose: 5000,
         theme: "light"
@@ -64,15 +64,20 @@ useEffect(() => {
         toast.success("Login exitoso");
 
         setTimeout(() => {
+          //console.log("Roles:", roles); // 👈 Verificación antes de navegar
+
           if (Array.isArray(roles) && roles.includes("ROLE_ADMIN")) {
+            toast.info("Redirigiendo al panel de administrador 🛠️");
             navigate("/admin");
           } else {
+            toast.info("Redirigiendo al panel de usuario 🧘");
             navigate("/dashboard");
           }
-        }, 1000); // ⏳ Espera 1 segundo antes de navegar
+        }, 1000);
+
       } else {
         await register(form);
-        toast.success("Registro exitoso. Ahora puedes iniciar sesión.");
+        toast.success("Registro alineado. Ahora puedes iniciar sesión.");
         setIsLogin(true);
       }
     } catch (err) {
