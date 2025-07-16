@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Link } from 'react-router-dom';
 
 const CreatePetPage = () => {
   const navigate = useNavigate();
@@ -23,12 +24,12 @@ const CreatePetPage = () => {
     e.preventDefault();
 
     if (!petName.trim()) {
-      setError("¡Por favor ingresa un nombre para tu mascota!");
+      setError("¡Por favor ingresa un nombre para tu buddy!");
       return;
     }
 
     if (!selectedPet) {
-      setError("¡Selecciona una mascota primero!");
+      setError("¡Selecciona un buddy primero!");
       return;
     }
 
@@ -52,16 +53,16 @@ const CreatePetPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al crear la mascota');
+        throw new Error('Error al crear buddy');
       }
 
-      toast.success("🐾 ¡Mascota creada exitosamente!");
+      toast.success("🐾 ¡Buddy creado exitosamente!");
       navigate('/dashboard');
 
     } catch (err) {
       console.error('Error:', err);
-      toast.error("⚠️ Hubo un problema al crear tu mascota");
-      setError('Error al crear la mascota');
+      toast.error("⚠️ Hubo un problema al crear tu buddy");
+      setError('Error al crear buddy');
     } finally {
       setIsSubmitting(false);
     }
@@ -70,18 +71,18 @@ const CreatePetPage = () => {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h1 style={styles.title}>Crear Nueva Mascota</h1>
+        <h1 style={styles.title}>Crear Un Nuevo Buddy</h1>
 
         {error && <div style={styles.errorAlert}>{error}</div>}
 
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Nombre de tu mascota:</label>
+            <label style={styles.label}>Nombre de tu Buddy:</label>
             <input
               type="text"
               value={petName}
               onChange={(e) => setPetName(e.target.value)}
-              placeholder="Ej: Estrella, Paz, Serenidad..."
+              placeholder="Ej: Pepe, Pipo, Paco..."
               maxLength={20}
               style={styles.input}
               disabled={isSubmitting}
@@ -90,7 +91,7 @@ const CreatePetPage = () => {
           </div>
 
           <div style={styles.formGroup}>
-            <label style={styles.label}>Selecciona una mascota:</label>
+            <label style={styles.label}>Selecciona un Buddy:</label>
             <div style={styles.petsGrid}>
               {availablePets.map(pet => (
                 <div
@@ -125,9 +126,12 @@ const CreatePetPage = () => {
                 <span style={styles.spinner}></span> Creando...
               </>
             ) : (
-              "Crear Mascota"
+              "Crear Buddy"
             )}
           </button>
+          <Link to="/dashboard">
+            <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
+          </Link>
         </form>
       </div>
     </div>
@@ -224,6 +228,21 @@ const styles = {
     fontWeight: '600',
     color: '#333',
     margin: 0
+  },
+  floatingBackButton: {
+    position: 'fixed',
+    bottom: '20px',
+    left: '20px',
+    backgroundColor: '#6a11cb',
+    color: 'white',
+    padding: '12px 20px',
+    borderRadius: '30px',
+    border: 'none',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+    zIndex: 1000
   },
   submitButton: {
     padding: '14px 20px',

@@ -86,8 +86,12 @@ function PetDetailPage() {
           </div>
         </div>
       )}
+        <Link to="/dashboard">
+            <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
+          </Link>
     </div>
   );
+
 }
 
 const styles = {
@@ -141,6 +145,21 @@ const styles = {
     cursor: 'pointer',
     marginTop: '1rem'
   },
+ floatingBackButton: {
+   position: 'fixed',
+   bottom: '20px',
+   left: '20px',
+   backgroundColor: '#6a11cb',
+   color: 'white',
+   padding: '12px 20px',
+   borderRadius: '30px',
+   border: 'none',
+   fontSize: '1rem',
+   fontWeight: 'bold',
+   cursor: 'pointer',
+   boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+   zIndex: 1000
+ },
   statsContainer: {
     display: 'flex',
     justifyContent: 'space-around',

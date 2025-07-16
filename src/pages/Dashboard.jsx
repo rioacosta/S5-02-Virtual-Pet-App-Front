@@ -44,7 +44,7 @@ export default function Dashboard() {
         })
           .then(res => res.json())
           .then(data => {
-              console.log("Mascotas desde backend:", data); // 👀 Revisa si avatarUrl existe y cómo se ve
+              console.log("Buddy's desde backend:", data); // 👀 Revisa si avatarUrl existe y cómo se ve
             setPets(data);
             const total = data.reduce((sum, pet) => sum + (pet.totalMeditationMinutes || 0), 0);
             setTotalMinutes(total);
@@ -83,8 +83,7 @@ export default function Dashboard() {
 
 
       <div style={{ position: "relative", zIndex: 1 }}>
-        <h1>Bienvenido {userData?.username || ''} 🧘</h1>
-
+        <h1>{userData?.username || ''} este es tu espacio de paz 🧘</h1>
         <button onClick={handleLogout} style={styles.logoutButton}>
           🔒 Cerrar sesión
         </button>

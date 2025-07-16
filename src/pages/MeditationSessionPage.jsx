@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function MeditationSessionPage() {
   const { petId } = useParams();
@@ -122,6 +123,9 @@ function MeditationSessionPage() {
           >
             Comenzar Meditación
           </button>
+          <Link to="/dashboard">
+            <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
+          </Link>
         </>
       ) : (
         <div style={styles.meditationScreen}>
@@ -143,6 +147,9 @@ function MeditationSessionPage() {
       )}
     </div>
   );
+  <Link to="/dashboard">
+    <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
+  </Link>
 }
 
 const styles = {
@@ -253,6 +260,21 @@ const styles = {
     cursor: 'pointer',
     marginTop: '2rem',
     fontWeight: 'bold'
+  },
+  floatingBackButton: {
+    position: 'fixed',
+    bottom: '20px',
+    left: '20px',
+    backgroundColor: '#6a11cb',
+    color: 'white',
+    padding: '12px 20px',
+    borderRadius: '30px',
+    border: 'none',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+    zIndex: 1000
   }
 };
 
