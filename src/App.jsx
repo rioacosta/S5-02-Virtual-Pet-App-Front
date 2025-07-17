@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { isTokenExpired } from './utils/authUtils';
 
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
@@ -11,13 +12,24 @@ import PetDetailPage from './pages/PetDetailPage';
 import MeditationSessionPage from './pages/MeditationSessionPage';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const location = useLocation();
 
   useEffect(() => {
-    // Se actualiza la autenticación en cada cambio de ruta
-    setIsAuthenticated(!!localStorage.getItem('token'));
+    const token = localStorage.getItem("token");
+
+    if (!token || isTokenExpired(token)) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("roles");
+      setIsAuthenticated(false);
+    } else {
+      setIsAuthenticated(true);
+    }
   }, [location]);
+
+  if (isAuthenticated === null) {
+    return <div>Cargando...</div>;
+  }
 
   return (
     <>
@@ -37,14 +49,14 @@ function App() {
           path="/dashboard"
           element={isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />}
         />
-       <Route
-         path="/admin"
-         element={
-           isAuthenticated && JSON.parse(localStorage.getItem("roles") || "[]").includes("ROLE_ADMIN")
-             ? <AdminDashboard />
-             : <Navigate to="/dashboard" replace />
-         }
-       />
+        <Route
+          path="/admin"
+          element={
+            isAuthenticated && JSON.parse(localStorage.getItem("roles") || "[]").includes("ROLE_ADMIN")
+              ? <AdminDashboard />
+              : <Navigate to="/dashboard" replace />
+          }
+        />
         <Route
           path="/create-pet"
           element={isAuthenticated ? <CreatePetPage /> : <Navigate to="/" replace />}

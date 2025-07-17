@@ -14,10 +14,10 @@ const CreatePetPage = () => {
   const [error, setError] = useState('');
 
   const availablePets = [
-    { id: 1, name: "Luli", image: "/src/assets/Luli.png" },
-    { id: 2, name: "Lele", image: "/src/assets/Lele.png" },
-    { id: 3, name: "Lilo", image: "/src/assets/Lilo.png" },
-    { id: 4, name: "Lolo", image: "/src/assets/Lolo.png" }
+    { id: 1, name: "Luli", image: "public/assets/avatars/Luli.png" },
+    { id: 2, name: "Lele", image: "public/assets/avatars/Lele.png" },
+    { id: 3, name: "Lilo", image: "public/assets/avatars/Lilo.png" },
+    { id: 4, name: "Lolo", image: "public/assets/avatars/Lolo.png" }
   ];
 
   const handleSubmit = async (e) => {

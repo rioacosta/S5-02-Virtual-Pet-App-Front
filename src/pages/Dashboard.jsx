@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import backgroundImage from "../assets/the-temple.png";
 import { jwtDecode } from "jwt-decode";
 import { isTokenExpired } from "../utils/authUtils";
 
@@ -10,109 +9,113 @@ export default function Dashboard() {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token || isTokenExpired(token)) {
-        const userId = localStorage.getItem("userId") || "usuario";
-        localStorage.setItem("loggedOut", "true");
-        localStorage.setItem("userId", userId);
-        navigate("/");
+
+    if (!token || token === "undefined") {
+      console.warn("Token no encontrado. Redirigiendo...");
+      navigate("/", { replace: true });
+      return;
+    }
+
+    try {
+      const expired = isTokenExpired(token);
+      console.log("¿Token expirado?:", expired);
+
+      if (expired) {
+        console.warn("Token expirado. Redirigiendo...");
+        localStorage.removeItem("token");
+        navigate("/", { replace: true });
         return;
       }
+    } catch (error) {
+      console.error("Error al verificar token:", error);
+      navigate("/", { replace: true });
+      return;
+    }
 
-    // ✅ Decodificar token y guardar nombre
     const decoded = jwtDecode(token);
-    console.log("Usuario desde token:", decoded);
     setUserData({ name: decoded.userId });
 
-    // ✅ Obtener datos del backend (opcional si necesitas más info)
     fetch("http://localhost:8080/api/v1/users/me", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
-      .then(data => {
-        console.log("Datos del backend:", data);
-        setUserData(data);
-      })
+      .then(data => setUserData(data))
       .catch(err => console.error("Error al cargar usuario:", err));
 
+    fetch("http://localhost:8080/api/pets", {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        setPets(data);
+        const total = data.reduce((sum, pet) => sum + (pet.totalMeditationMinutes || 0), 0);
+        setTotalMinutes(total);
+      })
+      .catch(err => console.error("Error al cargar buddy:", err));
+  }, [navigate]);
 
-    // ✅ Obtener mascotas
-     fetch("http://localhost:8080/api/pets", {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-          .then(res => res.json())
-          .then(data => {
-              console.log("Buddy's desde backend:", data); // 👀 Revisa si avatarUrl existe y cómo se ve
-            setPets(data);
-            const total = data.reduce((sum, pet) => sum + (pet.totalMeditationMinutes || 0), 0);
-            setTotalMinutes(total);
-          })
-          .catch(err => console.error("Error al cargar buddy:", err));
-      }, [navigate]);
-
-    const handleLogout = () => {
-        localStorage.setItem("loggedOut", "true");
-        localStorage.setItem("userId", userData?.username || "usuario");
-        localStorage.removeItem("token");
-        localStorage.removeItem("roles");
-        window.location.href = "/";
-
-      };
+  const handleLogout = () => {
+    localStorage.setItem("loggedOut", "true");
+    localStorage.setItem("userId", userData?.username || "usuario");
+    localStorage.removeItem("token");
+    localStorage.removeItem("roles");
+    window.location.href = "/";
+  };
 
   return (
-    <div style={{
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      minHeight: "100vh",
-      padding: "2rem",
-      position: "relative"
-    }}>
-      {/* Overlay para legibilidad */}
-      <div style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(255, 255, 255, 0.85)",
-        zIndex: 0
-      }}/>
-
+    <div
+      style={{
+        backgroundImage: `url(/assets/the-temple.png)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        padding: "2rem",
+        position: "relative"
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(255, 255, 255, 0.85)",
+          zIndex: 0
+        }}
+      />
 
       <div style={{ position: "relative", zIndex: 1 }}>
-        <h1>{userData?.username || ''} este es tu espacio de paz 🧘</h1>
+        <h1>{userData?.username || ""} este es tu espacio de paz 🧘</h1>
         <button onClick={handleLogout} style={styles.logoutButton}>
           🔒 Cerrar sesión
         </button>
-        {/* Contador de meditación */}
+
         <div style={styles.meditationCounter}>
-          <h2>Tiempo Total Meditado</h2>
+          <h2>Tu Tiempo Total Meditado</h2>
           <div style={styles.counter}>{totalMinutes}</div>
           <p>minutos</p>
         </div>
 
         <Link to="/create-pet">
-          <button style={styles.createButton}>
-            ➕ Crear buddy
-          </button>
+          <button style={styles.createButton}>➕ Crear buddy</button>
         </Link>
 
-        <h3 style={{ marginTop: '2rem' }}>Tus Compañeros de Meditación</h3>
+        <h3 style={{ marginTop: "2rem" }}>Tus Compañeros de Meditación</h3>
         <div style={styles.petsContainer}>
           {pets.map((pet) => (
-            <Link
-              to={`/pet/${pet.id}`}
-              key={pet.id}
-              style={{ textDecoration: 'none' }}
-            >
+            <Link to={`/pet/${pet.id}`} key={pet.id} style={{ textDecoration: "none" }}>
               <div style={styles.petCard}>
                 <img
-                  src={pet.avatarUrl || "/default-avatar.png"}
+                  src={getAvatarByLevel(pet)}
                   alt={pet.name}
                   style={styles.petImage}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null; // Evita bucle infinito si también falla esta
+                    e.currentTarget.src = "/assets/avatars/the-gang.png";
+                  }}
                 />
                 <h3>{pet.name}</h3>
                 <p>Nivel {pet.level || 1}</p>
@@ -124,22 +127,40 @@ export default function Dashboard() {
     </div>
   );
 }
+function getAvatarByLevel(pet) {
+  if (Array.isArray(pet.avatarStages) && pet.avatarStages.length > 0) {
+    const index = Math.min((pet.level || 1) - 1, pet.avatarStages.length - 1);
+    const stage = pet.avatarStages[index];
+    if (stage) {
+      console.log(`🐾 Mostrando stage: ${stage}`);
+      return stage;
+    }
+  }
+
+  if (pet.avatar) {
+    console.log(`🐾 Mostrando avatar base: ${pet.avatar}`);
+    return `/assets/avatars/${pet.avatar}`;
+  }
+
+  return "/assets/avatars/the-gang.png";
+}
+
 
 const styles = {
   meditationCounter: {
-    textAlign: 'center',
-    margin: '2rem 0',
-    padding: '1.5rem',
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    borderRadius: '12px',
-    backdropFilter: 'blur(5px)',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+    textAlign: "center",
+    margin: "2rem 0",
+    padding: "1.5rem",
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    borderRadius: "12px",
+    backdropFilter: "blur(5px)",
+    boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
   },
   counter: {
-    fontSize: '4rem',
-    fontWeight: 'bold',
-    color: '#6a11cb',
-    margin: '0.5rem 0'
+    fontSize: "4rem",
+    fontWeight: "bold",
+    color: "#6a11cb",
+    margin: "0.5rem 0",
   },
   logoutButton: {
     marginBottom: "1.5rem",
@@ -149,7 +170,7 @@ const styles = {
     border: "none",
     borderRadius: "8px",
     cursor: "pointer",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   createButton: {
     padding: "12px 20px",
@@ -159,15 +180,15 @@ const styles = {
     borderRadius: "50px",
     cursor: "pointer",
     fontSize: "1rem",
-    fontWeight: 'bold',
-    display: 'block',
-    margin: '0 auto'
+    fontWeight: "bold",
+    display: "block",
+    margin: "0 auto",
   },
   petsContainer: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
     gap: "1.5rem",
-    marginTop: "1.5rem"
+    marginTop: "1.5rem",
   },
   petCard: {
     backgroundColor: "rgba(255, 255, 255, 0.8)",
@@ -177,18 +198,15 @@ const styles = {
     textAlign: "center",
     cursor: "pointer",
     transition: "transform 0.3s ease",
-    color: '#333',
-    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-    '&:hover': {
-      transform: 'translateY(-5px)'
-    }
+    color: "#333",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
   },
   petImage: {
     width: "100%",
     borderRadius: "50%",
     aspectRatio: "1/1",
     objectFit: "cover",
-    marginBottom: '0.8rem',
-    border: '3px solid #6a11cb'
-  }
+    marginBottom: "0.8rem",
+    border: "3px solid #6a11cb",
+  },
 };

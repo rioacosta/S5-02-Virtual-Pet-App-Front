@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import backgroundImage from "../assets/the-temple.png";
 import { useNavigate } from "react-router-dom";
 import {
   fetchUsersWithPets,
@@ -17,8 +16,26 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/");
+
+    if (!token || token === "undefined") {
+      console.warn("Token no encontrado. Redirigiendo...");
+      navigate("/", { replace: true });
+      return;
+    }
+
+    try {
+      const expired = isTokenExpired(token);
+      console.log("¿Token expirado?:", expired);
+
+      if (expired) {
+        console.warn("Token expirado. Redirigiendo...");
+        localStorage.removeItem("token");
+        navigate("/", { replace: true });
+        return;
+      }
+    } catch (error) {
+      console.error("Error al verificar token:", error);
+      navigate("/", { replace: true });
       return;
     }
     loadUsers();
@@ -40,25 +57,27 @@ export default function AdminDashboard() {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("roles");
-    localStorage.setItem("loggedOut", "true"); // ✅ Marca la salida
+    localStorage.setItem("loggedOut", "true");
     navigate("/");
   };
 
   return (
-    <div style={{
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      minHeight: "100vh",
-      padding: "2rem",
-      position: "relative"
-    }}>
+    <div
+      style={{
+        backgroundImage: `url(/assets/the-temple.png)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        padding: "2rem",
+        position: "relative"
+      }}
+    >
       <div style={{
         position: "absolute",
         top: 0, left: 0, right: 0, bottom: 0,
         backgroundColor: "rgba(255,255,255,0.85)",
         zIndex: 0
-      }}/>
+      }} />
 
       <div style={{ position: "relative", zIndex: 1 }}>
         <h1>Panel de Administración 🧘‍♀️🔐</h1>
@@ -88,7 +107,7 @@ export default function AdminDashboard() {
               {user.pets.map(pet => (
                 <div key={pet.id} style={cardStyles.petCard}>
                   <img
-                    src={pet.avatarUrl || "/default-avatar.png"}
+                    src={`/assets/${pet.avatar || "default-avatar.png"}`}
                     alt={pet.name}
                     style={cardStyles.petImage}
                   />
