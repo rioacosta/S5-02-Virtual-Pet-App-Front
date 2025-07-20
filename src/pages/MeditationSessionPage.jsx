@@ -116,11 +116,9 @@ function MeditationSessionPage() {
       <div style={{ position: "relative", zIndex: 1 }}>
         {!isMeditating ? (
           <>
-            <h1 style={styles.title}>Sesión de Meditación con {pet?.name}</h1>
-
             {/* Vista previa del hábitat */}
             <div style={styles.previewContainer}>
-              <h2>Vista Previa del Hábitat</h2>
+              <h2>Sesión de Meditación con {pet?.name}</h2>
               <div style={styles.habitatPreview}>
                 <div
                   style={{
@@ -236,20 +234,12 @@ function MeditationSessionPage() {
 }
 
 const styles = {
-  title: {
+  previewContainer: {
     textAlign: 'center',
     color: '#5a32a8',
     marginBottom: '2rem',
-    fontSize: '2.5rem',
+    fontSize: '1.5rem',
     textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
-  },
-  previewContainer: {
-    backgroundColor: '#f8f9fa',
-    borderRadius: '15px',
-    padding: '1.5rem',
-    margin: '2rem auto',
-    boxShadow: '0 6px 15px rgba(0,0,0,0.1)',
-    maxWidth: '800px'
   },
   habitatPreview: {
     margin: '1rem 0',
@@ -259,7 +249,7 @@ const styles = {
     flexDirection: 'column'
   },
   previewImage: {
-    width: '100%',
+    width: '70%',
     height: '300px',
     borderRadius: '12px',
     backgroundSize: 'cover',
@@ -294,6 +284,7 @@ const styles = {
     filter: 'drop-shadow(0 5px 10px rgba(0,0,0,0.3))'
   },
   selectionCard: {
+    textAlign: 'center',
     backgroundColor: '#f8f9fa',
     borderRadius: '12px',
     padding: '1.5rem',
