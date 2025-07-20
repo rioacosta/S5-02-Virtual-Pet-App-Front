@@ -69,73 +69,110 @@ const CreatePetPage = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>Crear Un Nuevo Buddy</h1>
+    <div
+      style={{
+        backgroundImage: `url(/assets/the-temple.png)`,
+        backgroundSize: "fixed",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        padding: "2rem",
+        position: "relative"
+      }}
+    >
+      {/* Capa blanca semitransparente */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(255, 255, 255, 0.85)",
+          zIndex: 0,
+          pointerEvents: "none"
+        }}
+      />
 
-        {error && <div style={styles.errorAlert}>{error}</div>}
+      {/* Contenido principal */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          paddingTop: "3rem",
+          minHeight: "100vh",
+          padding: "1rem",
+          }}>
+        <div style={styles.card}>
+          <h1 style={styles.title}>Crear Un Nuevo Buddy</h1>
 
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Nombre de tu Buddy:</label>
-            <input
-              type="text"
-              value={petName}
-              onChange={(e) => setPetName(e.target.value)}
-              placeholder="Ej: Pepe, Pipo, Paco..."
-              maxLength={20}
-              style={styles.input}
-              disabled={isSubmitting}
-            />
-            <small style={styles.counter}>{petName.length}/20 caracteres</small>
-          </div>
+          {error && <div style={styles.errorAlert}>{error}</div>}
 
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Selecciona un Buddy:</label>
-            <div style={styles.petsGrid}>
-              {availablePets.map(pet => (
-                <div
-                  key={pet.id}
-                  style={{
-                    ...styles.petOption,
-                    borderColor: selectedPet?.id === pet.id ? '#6a11cb' : '#ddd',
-                    transform: selectedPet?.id === pet.id ? 'scale(1.05)' : 'scale(1)'
-                  }}
-                  onClick={() => setSelectedPet(pet)}
-                >
-                  <div style={styles.petImageContainer}>
-                    <img
-                      src={pet.image}
-                      alt={pet.name}
-                      style={styles.petImage}
-                    />
-                  </div>
-                  <p style={styles.petName}>{pet.name}</p>
-                </div>
-              ))}
+          <form onSubmit={handleSubmit} style={styles.form}>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Nombre de tu Buddy:</label>
+              <input
+                type="text"
+                value={petName}
+                onChange={(e) => setPetName(e.target.value)}
+                placeholder="Ej: Pepe, Pipo, Paco..."
+                maxLength={20}
+                style={styles.input}
+                disabled={isSubmitting}
+              />
+              <small style={styles.counter}>{petName.length}/20 caracteres</small>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            style={styles.submitButton}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <>
-                <span style={styles.spinner}></span> Creando...
-              </>
-            ) : (
-              "Crear Buddy"
-            )}
-          </button>
-          <Link to="/dashboard">
-            <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
-          </Link>
-        </form>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Selecciona un Buddy:</label>
+              <div style={styles.petsGrid}>
+                {availablePets.map(pet => (
+                  <div
+                    key={pet.id}
+                    style={{
+                      ...styles.petOption,
+                      borderColor: selectedPet?.id === pet.id ? '#6a11cb' : '#ddd',
+                      transform: selectedPet?.id === pet.id ? 'scale(1.05)' : 'scale(1)'
+                    }}
+                    onClick={() => setSelectedPet(pet)}
+                  >
+                    <div style={styles.petImageContainer}>
+                      <img
+                        src={pet.image.replace('public/', '/')}
+                        alt={pet.name}
+                        style={styles.petImage}
+                      />
+                    </div>
+                    <p style={styles.petName}>{pet.name}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              style={styles.submitButton}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span style={styles.spinner}></span> Creando...
+                </>
+              ) : (
+                "Crear Buddy"
+              )}
+            </button>
+            <Link to="/dashboard">
+              <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
+            </Link>
+          </form>
+        </div>
       </div>
     </div>
   );
+
 };
 
 // Estilos mejorados
@@ -233,7 +270,7 @@ const styles = {
     position: 'fixed',
     bottom: '20px',
     left: '20px',
-    backgroundColor: '#6a11cb',
+    backgroundColor: '#9966FF',
     color: 'white',
     padding: '12px 20px',
     borderRadius: '30px',
@@ -246,7 +283,7 @@ const styles = {
   },
   submitButton: {
     padding: '14px 20px',
-    backgroundColor: '#6a11cb',
+    backgroundColor: '#9966FF',
     color: 'white',
     border: 'none',
     borderRadius: '50px',

@@ -79,8 +79,8 @@ function PetDetailPage() {
         x: Math.random() * screenWidth, // Posición horizontal aleatoria
         bottom: 0, // Comienzan en la parte inferior
         size: 20 + Math.random() * 30,
-        speed: 1 + Math.random() * 1,
-        opacity: 1
+        speed: 1 + Math.random() * 3,
+        //opacity: 1
       });
     }
 
@@ -93,137 +93,149 @@ function PetDetailPage() {
   if (!pet) return <div style={styles.error}>Mascota no encontrada</div>;
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
+      <div
+        style={{
+          backgroundImage: `url(/assets/the-temple.png)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          minHeight: "100vh",
+          padding: "2rem",
+          position: "relative"
+        }}
+      >
+        {/* Capa blanca semitransparente */}
         <div
-          ref={avatarContainerRef}
-          style={styles.avatarContainer}
-        >
-          {/* Imagen base */}
-          <img
-            src={`/assets/avatars/${pet.avatar || "the-gang.png"}`}
-            alt={pet.name}
-            style={styles.avatarBase}
-          />
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(255, 255, 255, 0.85)",
+            zIndex: 0,
+            pointerEvents: "none"
+          }}
+        />
 
-          {/* Capas de recompensas como accesorios */}
-          {pet.rewards?.map((reward, index) => (
-            <img
-              key={index}
-              src={`/assets/accessories/${reward}.png`}
-              alt={reward}
-              style={styles.accessoryLayer}
-              onError={(e) => { e.target.style.display = 'none'; }} // evita error si falta imagen
-            />
-          ))}
-        </div>
+        {/* Contenido principal */}
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div style={styles.header}>
+            <div ref={avatarContainerRef} style={styles.avatarContainer}>
 
-        {/* Nombre editable */}
-        <div style={styles.nameContainer}>
-          {isEditing ? (
-            <div style={styles.editContainer}>
-              <input
-                type="text"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                style={styles.nameInput}
-                autoFocus
+                        {/* Imagen base */}
+    	<img
+                src={`/assets/avatars/${pet.avatar || "the-gang.png"}`}
+                alt={pet.name}
+                style={styles.avatarBase}
               />
-              <button
-                onClick={handleNameUpdate}
-                style={styles.saveButton}
-              >
-                ✓
-              </button>
-              <button
-                onClick={() => setIsEditing(false)}
-                style={styles.cancelButton}
-              >
-                ✕
-              </button>
+
+              {/* Capas de recompensas como accesorios */}
+              {pet.rewards?.map((reward, index) => (
+                <img
+                  key={index}
+                  src={`/assets/accessories/${reward}.png`}
+                  alt={reward}
+                  style={styles.accessoryLayer}
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+              ))}
             </div>
-          ) : (
-            <div style={styles.editContainer}>
-              <h1 style={styles.petName}>{pet.name}</h1>
-              <button
-                onClick={() => setIsEditing(true)}
-                style={styles.editButton}
-                title="Editar nombre"
-              >
-                ✏️
+
+            {/* Nombre editable */}
+            <div style={styles.nameContainer}>
+              {isEditing ? (
+                <div style={styles.editContainer}>
+                  <input
+                    type="text"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    style={styles.nameInput}
+                    autoFocus
+                  />
+                  <button onClick={handleNameUpdate} style={styles.saveButton}>✓</button>
+                  <button onClick={() => setIsEditing(false)} style={styles.cancelButton}>✕</button>
+                </div>
+              ) : (
+                <div style={styles.editContainer}>
+                  <h1 style={styles.petName}>{pet.name}</h1>
+                  <button onClick={() => setIsEditing(true)} style={styles.editButton} title="Editar nombre">✏️</button>
+                </div>
+              )}
+            </div>
+
+            {/* Botones de acciones */}
+            <div style={styles.actionButtons}>
+              <button onClick={handleHug} style={styles.hugButton}>
+                <span style={styles.hugIcon}>🤗</span> ABRAZAR
               </button>
+              <Link to={`/meditate/${pet.id}`}>
+                <button style={styles.meditateButton}>
+                  <span style={styles.meditateIcon}>🧘</span> MEDITAR
+                </button>
+              </Link>
+            </div>
+          </div>
+
+          <div style={styles.statsContainer}>
+            <div style={styles.statCard}>
+              <h3>Nivel</h3>
+              <p style={styles.statValue}>{pet.level || 1}</p>
+            </div>
+            <div style={styles.statCard}>
+              <h3>Experiencia</h3>
+              <p style={styles.statValue}>{pet.experience || 0} XP</p>
+            </div>
+            <div style={styles.statCard}>
+              <h3>Felicidad</h3>
+              <p style={styles.statValue}>{pet.happiness || 100}%</p>
+            </div>
+          </div>
+
+          <div style={styles.infoCard}>
+            <h2>Meditación Total</h2>
+            <p style={styles.meditationMinutes}>{pet.totalMeditationMinutes || 0} minutos</p>
+          </div>
+
+          {pet.rewards?.length > 0 && (
+            <div style={styles.rewardsSection}>
+              <h2>Premios Obtenidos</h2>
+              <div style={styles.rewardsContainer}>
+                {pet.rewards.map((reward, index) => (
+                  <div key={index} style={styles.rewardItem}>
+                    <div style={styles.rewardIcon}>🏆</div>
+                    <p>{reward}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
-        </div>
 
-        {/* Botones de acciones */}
-        <div style={styles.actionButtons}>
-          <button onClick={handleHug} style={styles.hugButton}>
-            <span style={styles.hugIcon}>🤗</span> ABRAZAR
-          </button>
-          <Link to={`/meditate/${pet.id}`}>
-            <button style={styles.meditateButton}><span style={styles.meditateIcon}>🧘</span> MEDITAR</button>
+          <Link to="/dashboard">
+            <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
           </Link>
+
+          {/* Animación de corazones */}
+
+          {hearts.map(heart => (
+            <div
+              key={heart.id}
+              style={{
+                ...styles.heart,
+                left: `${heart.x}px`,
+                bottom: `${heart.bottom}px`,
+                width: `${heart.size}px`,
+                height: `${heart.size}px`,
+                fontSize: `${heart.size}px`,
+                animation: `floatUp ${heart.speed}s ease-out forwards`
+              }}
+            >
+              ❤️
+            </div>
+          ))}
         </div>
       </div>
+    );
 
-      <div style={styles.statsContainer}>
-        <div style={styles.statCard}>
-          <h3>Nivel</h3>
-          <p style={styles.statValue}>{pet.level || 1}</p>
-        </div>
-        <div style={styles.statCard}>
-          <h3>Experiencia</h3>
-          <p style={styles.statValue}>{pet.experience || 0} XP</p>
-        </div>
-        <div style={styles.statCard}>
-          <h3>Felicidad</h3>
-          <p style={styles.statValue}>{pet.happiness || 100}%</p>
-        </div>
-      </div>
-
-      <div style={styles.infoCard}>
-        <h2>Meditación Total</h2>
-        <p style={styles.meditationMinutes}>{pet.totalMeditationMinutes || 0} minutos</p>
-      </div>
-
-      {pet.rewards?.length > 0 && (
-        <div style={styles.rewardsSection}>
-          <h2>Premios Obtenidos</h2>
-          <div style={styles.rewardsContainer}>
-            {pet.rewards.map((reward, index) => (
-              <div key={index} style={styles.rewardItem}>
-                <div style={styles.rewardIcon}>🏆</div>
-                <p>{reward}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <Link to="/dashboard">
-        <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
-      </Link>
-
-      {/* Animación de corazones */}
-      {hearts.map(heart => (
-        <div
-          key={heart.id}
-          style={{
-            ...styles.heart,
-            left: `${heart.x}px`,
-            bottom: `${heart.bottom}px`,
-            width: `${heart.size}px`,
-            height: `${heart.size}px`,
-            fontSize: `${heart.size}px`,
-            animation: `floatUp ${heart.speed}s ease-out forwards`
-          }}
-        >
-          🤍
-        </div>
-      ))}
-    </div>
-  );
 }
 
 const styles = {
@@ -243,32 +255,41 @@ const styles = {
     padding: '20px',
     borderRadius: '15px',
     background: 'rgba(255, 255, 255, 0.8)',
-    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)'
+    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+    maxWidth: '400px',        // ← nuevo: limita el ancho
+    marginLeft: 'auto',       // ← centra horizontalmente
+    marginRight: 'auto'       // ← centra horizontalmente
   },
-  avatarContainer: {
-    position: 'relative',
-    width: '180px',
-    height: '180px',
-    margin: '0 auto',
-    marginBottom: '1.5rem'
-  },
-  avatarBase: {
-    width: '100%',
-    height: '100%',
-    borderRadius: '50%',
-    objectFit: 'cover',
-    border: '6px solid #8a2be2',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
-  },
-  accessoryLayer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    pointerEvents: 'none',
-    zIndex: 10
-  },
+  // CAMBIO CLAVE: Contenedor ovalado con enfoque en la parte superior
+    avatarContainer: {
+      position: 'relative',
+      width: '200px',  // Ancho aumentado para el óvalo
+      height: '240px', // Alto aumentado para el óvalo
+      margin: '0 auto',
+      marginBottom: '1.5rem',
+      borderRadius: '50% / 40%', // Forma ovalada (horizontal 50%, vertical 40%)
+      overflow: 'hidden', // Importante para recortar la imagen
+      border: '6px solid #9966FF',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+    },
+    // CAMBIO CLAVE: Enfocar la parte superior de la imagen
+    avatarBase: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      objectPosition: 'top' // Muestra la parte superior de la imagen
+    },
+    accessoryLayer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      pointerEvents: 'none',
+      zIndex: 10,
+      objectFit: 'cover',
+      objectPosition: 'top' // Asegura que los accesorios también se alineen arriba
+    },
   nameContainer: {
     margin: '1rem 0',
     minHeight: '60px'
@@ -389,7 +410,7 @@ const styles = {
     position: 'fixed',
     bottom: '20px',
     left: '20px',
-    backgroundColor: '#6a11cb',
+    backgroundColor: '#9966FF',
     color: 'white',
     padding: '12px 20px',
     borderRadius: '30px',

@@ -89,13 +89,15 @@ useEffect(() => {
     <div
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
+        backgroundSize: "fixed",
         backgroundPosition: "center",
         height: "100vh",
         display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
-      }}
+        justifyContent: "left",
+        alignItems: "flex-start", // <-- Esto lo pega arriba
+        //paddingTop: "2rem"
+        padding: "2rem"
+        }}
     >
       <div
         style={{

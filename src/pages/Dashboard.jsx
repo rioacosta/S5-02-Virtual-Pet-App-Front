@@ -163,9 +163,12 @@ const styles = {
     margin: "0.5rem 0",
   },
   logoutButton: {
+    position: 'absolute',
+    top: '20px',
+    right: '20px',
     marginBottom: "1.5rem",
     padding: "10px 20px",
-    backgroundColor: "#d9534f",
+    backgroundColor: "#FF6666",
     color: "white",
     border: "none",
     borderRadius: "8px",
@@ -174,7 +177,7 @@ const styles = {
   },
   createButton: {
     padding: "12px 20px",
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#66CC33",
     color: "white",
     border: "none",
     borderRadius: "50px",
@@ -202,11 +205,9 @@ const styles = {
     boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
   },
   petImage: {
-    width: "100%",
-    borderRadius: "50%",
-    aspectRatio: "1/1",
-    objectFit: "cover",
-    marginBottom: "0.8rem",
-    border: "3px solid #6a11cb",
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    objectPosition: 'top'
   },
 };
