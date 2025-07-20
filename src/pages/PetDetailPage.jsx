@@ -229,7 +229,7 @@ function PetDetailPage() {
                 animation: `floatUp ${heart.speed}s ease-out forwards`
               }}
             >
-              ❤️
+              💙
             </div>
           ))}
         </div>
@@ -240,15 +240,14 @@ function PetDetailPage() {
 
 const styles = {
   container: {
-    padding: '2rem',
-    maxWidth: '800px',
-    margin: '0 auto',
-    position: 'relative',
-    overflow: 'hidden',
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-    fontFamily: '"Comic Sans MS", cursive, sans-serif'
-  },
+      position: 'relative',
+      backgroundImage: 'url("/assets/the-temple.png")',
+      backgroundSize: 'flex',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      padding: '2rem',
+      zIndex: 0
+    },
   header: {
     textAlign: 'center',
     marginBottom: '2rem',

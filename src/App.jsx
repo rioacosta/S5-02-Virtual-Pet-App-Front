@@ -12,8 +12,9 @@ import PetDetailPage from './pages/PetDetailPage';
 import MeditationSessionPage from './pages/MeditationSessionPage';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -22,7 +23,10 @@ function App() {
       localStorage.removeItem("token");
       localStorage.removeItem("roles");
       setIsAuthenticated(false);
+      setIsAdmin(false);
     } else {
+      const roles = JSON.parse(localStorage.getItem("roles") || "[]");
+      setIsAdmin(roles.includes("ROLE_ADMIN"));
       setIsAuthenticated(true);
     }
   }, [location]);
@@ -39,7 +43,7 @@ function App() {
           path="/"
           element={
             isAuthenticated
-              ? JSON.parse(localStorage.getItem("roles") || "[]").includes("ROLE_ADMIN")
+              ? isAdmin
                 ? <Navigate to="/admin" replace />
                 : <Navigate to="/dashboard" replace />
               : <AuthPage />
@@ -52,9 +56,11 @@ function App() {
         <Route
           path="/admin"
           element={
-            isAuthenticated && JSON.parse(localStorage.getItem("roles") || "[]").includes("ROLE_ADMIN")
-              ? <AdminDashboard />
-              : <Navigate to="/dashboard" replace />
+            isAuthenticated === null
+              ? <div>Cargando...</div>
+              : isAuthenticated && isAdmin
+                ? <AdminDashboard />
+                : <Navigate to="/dashboard" replace />
           }
         />
         <Route

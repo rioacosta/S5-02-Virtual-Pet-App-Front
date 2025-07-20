@@ -55,20 +55,23 @@ useEffect(() => {
         }
 
         const decoded = jwtDecode(token);
+        console.log("TOKEN DECODIFICADO:", decoded);
         const roles = decoded.roles || [];
 
         localStorage.setItem("token", token);
         localStorage.setItem("userId", decoded.userId || decoded.id || decoded.sub);
         localStorage.setItem("roles", JSON.stringify(roles));
+        console.log("Guardado en localStorage roles:", localStorage.getItem("roles"));
+
 
         toast.success("Login exitoso");
 
         setTimeout(() => {
-          //console.log("Roles:", roles); // 👈 Verificación antes de navegar
+          console.log("Roles:", roles); // 👈 Verificación antes de navegar
 
           if (Array.isArray(roles) && roles.includes("ROLE_ADMIN")) {
             toast.info("Redirigiendo al panel de administrador 🛠️");
-            navigate("/admin");
+            window.location.href = "/admin";  // Cambio a navegación forzada para refrescar estado
           } else {
             toast.info("Redirigiendo al panel de usuario 🧘");
             navigate("/dashboard");

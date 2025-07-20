@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { isTokenExpired } from "../utils/authUtils";
 import {
   fetchUsersWithPets,
   toggleUserEnabled,
@@ -14,32 +15,42 @@ export default function AdminDashboard() {
     fetchUsersWithPets().then(setUsers);
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+useEffect(() => {
+  const token = localStorage.getItem("token");
 
-    if (!token || token === "undefined") {
-      console.warn("Token no encontrado. Redirigiendo...");
+  if (!token || token === "undefined") {
+    console.warn("Token no encontrado. Redirigiendo...");
+    navigate("/", { replace: true });
+    return;
+  }
+
+  try {
+    const expired = isTokenExpired(token);
+    if (expired) {
+      console.warn("Token expirado. Redirigiendo...");
+      localStorage.removeItem("token");
       navigate("/", { replace: true });
       return;
     }
 
-    try {
-      const expired = isTokenExpired(token);
-      console.log("¿Token expirado?:", expired);
+    const roles = JSON.parse(localStorage.getItem("roles") || "[]");
+    const isAdmin = roles.includes("ROLE_ADMIN");
 
-      if (expired) {
-        console.warn("Token expirado. Redirigiendo...");
-        localStorage.removeItem("token");
-        navigate("/", { replace: true });
-        return;
-      }
-    } catch (error) {
-      console.error("Error al verificar token:", error);
-      navigate("/", { replace: true });
+    if (!isAdmin) {
+      console.warn("Acceso denegado: no es administrador");
+      navigate("/dashboard", { replace: true });
       return;
     }
-    loadUsers();
-  }, [navigate]);
+
+  } catch (error) {
+    console.error("Error al verificar token:", error);
+    navigate("/", { replace: true });
+    return;
+  }
+
+  loadUsers();
+}, [navigate]);
+
 
   const handleToggle = async (username) => {
     await toggleUserEnabled(username);
@@ -60,6 +71,11 @@ export default function AdminDashboard() {
     localStorage.setItem("loggedOut", "true");
     navigate("/");
   };
+
+  const goToUserDashboard = () => {
+    navigate("/dashboard");
+  };
+
 
   return (
     <div
@@ -85,6 +101,10 @@ export default function AdminDashboard() {
 
         <button onClick={handleLogout} style={cardStyles.logoutButton}>
           🔒 Cerrar sesión
+        </button>
+
+        <button onClick={goToUserDashboard} style={cardStyles.userDashboardButton}>
+          🧘 Ir al Dashboard de Usuario
         </button>
 
         {users.map(user => (
@@ -162,13 +182,27 @@ const cardStyles = {
     fontWeight: "bold"
   },
   logoutButton: {
-    marginBottom: "2rem",
+    position: 'absolute',
+    top: '20px',
+    right: '20px',
+    marginBottom: "1.5rem",
     padding: "10px 20px",
-    backgroundColor: "#d9534f",
+    backgroundColor: "#FF6666",
     color: "white",
     border: "none",
     borderRadius: "8px",
     cursor: "pointer",
     fontWeight: "bold"
+  },
+  userDashboardButton: {
+    marginBottom: "2rem",
+    padding: "10px 20px",
+    backgroundColor: "#5bc0de",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontWeight: "bold",
+    marginLeft: ".5 rem"
   }
 };

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 
 function MeditationSessionPage() {
   const { petId } = useParams();
@@ -64,100 +63,127 @@ function MeditationSessionPage() {
   };
 
   return (
-    <div style={styles.container}>
-      {!isMeditating ? (
-        <>
-          <h1>Sesión de Meditación con {pet?.name}</h1>
+    <div
+      style={{
+        backgroundImage: `url(/assets/the-temple.png)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        padding: "2rem",
+        position: "relative"
+      }}
+    >
+      {/* Capa blanca semitransparente en el fondo */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(255, 255, 255, 0.85)",
+          zIndex: 0,
+          pointerEvents: "none"
+        }}
+      />
 
-          <div style={styles.selectionCard}>
-            <h2>Selecciona un Hábitat</h2>
-            <div style={styles.habitatOptions}>
-              {['forest', 'beach', 'mountain', 'space'].map((hab) => (
-                <div
-                  key={hab}
-                  style={{
-                    ...styles.habitatOption,
-                    borderColor: habitat === hab ? '#6a11cb' : '#ddd'
-                  }}
-                  onClick={() => setHabitat(hab)}
-                >
-                  <div style={styles.habitatIcon}>
-                    {hab === 'forest' && '🌲'}
-                    {hab === 'beach' && '🏖️'}
-                    {hab === 'mountain' && '⛰️'}
-                    {hab === 'space' && '🚀'}
+      {/* Contenido principal encima */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {!isMeditating ? (
+          <>
+            <h1>Sesión de Meditación con {pet?.name}</h1>
+
+            <div style={styles.selectionCard}>
+              <h2>Selecciona un Hábitat</h2>
+              <div style={styles.habitatOptions}>
+                {['forest', 'beach', 'mountain', 'space'].map((hab) => (
+                  <div
+                    key={hab}
+                    style={{
+                      ...styles.habitatOption,
+                      borderColor: habitat === hab ? '#6a11cb' : '#ddd'
+                    }}
+                    onClick={() => setHabitat(hab)}
+                  >
+                    <div style={styles.habitatIcon}>
+                      {hab === 'forest' && '🌲'}
+                      {hab === 'beach' && '🏖️'}
+                      {hab === 'mountain' && '⛰️'}
+                      {hab === 'space' && '🚀'}
+                    </div>
+                    <p style={styles.habitatName}>
+                      {hab === 'forest' && 'Bosque'}
+                      {hab === 'beach' && 'Playa'}
+                      {hab === 'mountain' && 'Montaña'}
+                      {hab === 'space' && 'Espacio'}
+                    </p>
                   </div>
-                  <p style={styles.habitatName}>
-                    {hab === 'forest' && 'Bosque'}
-                    {hab === 'beach' && 'Playa'}
-                    {hab === 'mountain' && 'Montaña'}
-                    {hab === 'space' && 'Espacio'}
-                  </p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div style={styles.selectionCard}>
-            <h2>Duración de la Sesión</h2>
-            <div style={styles.durationControl}>
-              <button
-                onClick={() => setMinutes(prev => Math.max(1, prev - 5))}
-                style={styles.durationButton}
-              >
-                -
-              </button>
-              <div style={styles.durationDisplay}>{minutes} minutos</div>
-              <button
-                onClick={() => setMinutes(prev => Math.min(120, prev + 5))}
-                style={styles.durationButton}
-              >
-                +
-              </button>
+            <div style={styles.selectionCard}>
+              <h2>Duración de la Sesión</h2>
+              <div style={styles.durationControl}>
+                <button
+                  onClick={() => setMinutes(prev => Math.max(1, prev - 5))}
+                  style={styles.durationButton}
+                >
+                  -
+                </button>
+                <div style={styles.durationDisplay}>{minutes} minutos</div>
+                <button
+                  onClick={() => setMinutes(prev => Math.min(120, prev + 5))}
+                  style={styles.durationButton}
+                >
+                  +
+                </button>
+              </div>
             </div>
-          </div>
 
-          <button
-            onClick={startMeditation}
-            style={styles.startButton}
-          >
-            Comenzar Meditación
-          </button>
-          <Link to="/dashboard">
-            <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
-          </Link>
-        </>
-      ) : (
-        <div style={styles.meditationScreen}>
-          <div style={styles.timer}>{formatTime(timeLeft)}</div>
-          <div style={styles.habitatVisual}>
-            {habitat === 'forest' && '🌳🌲🦌🌿🌞'}
-            {habitat === 'beach' && '🏖️🌊🐚☀️🌴'}
-            {habitat === 'mountain' && '⛰️🌨️🦅🌲🚶'}
-            {habitat === 'space' && '🚀🌌🪐⭐🌠'}
+            <button
+              onClick={startMeditation}
+              style={styles.startButton}
+            >
+              Comenzar Meditación
+            </button>
+
+            <Link to="/dashboard">
+              <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
+            </Link>
+          </>
+        ) : (
+          <div style={styles.meditationScreen}>
+            <div style={styles.timer}>{formatTime(timeLeft)}</div>
+            <div style={styles.habitatVisual}>
+              {habitat === 'forest' && '🌳🌲🦌🌿🌞'}
+              {habitat === 'beach' && '🏖️🌊🐚☀️🌴'}
+              {habitat === 'mountain' && '⛰️🌨️🦅🌲🚶'}
+              {habitat === 'space' && '🚀🌌🪐⭐🌠'}
+            </div>
+            <p style={styles.meditationText}>Respira profundamente...</p>
+            <button
+              onClick={() => setIsMeditating(false)}
+              style={styles.cancelButton}
+            >
+              Finalizar Sesión
+            </button>
           </div>
-          <p style={styles.meditationText}>Respira profundamente...</p>
-          <button
-            onClick={() => setIsMeditating(false)}
-            style={styles.cancelButton}
-          >
-            Finalizar Sesión
-          </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
-  <Link to="/dashboard">
-    <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
-  </Link>
 }
 
 const styles = {
   container: {
+    position: 'relative',
+    backgroundImage: 'url("/assets/the-temple.png")',
+    backgroundSize: 'flex',
+    backgroundPosition: 'center',
+    minHeight: '100vh',
     padding: '2rem',
-    maxWidth: '800px',
-    margin: '0 auto',
-    textAlign: 'center'
+    zIndex: 0
   },
   selectionCard: {
     backgroundColor: '#f8f9fa',
@@ -179,11 +205,7 @@ const styles = {
     padding: '1rem',
     cursor: 'pointer',
     transition: 'all 0.3s',
-    width: '120px',
-    '&:hover': {
-      transform: 'translateY(-5px)',
-      borderColor: '#6a11cb'
-    }
+    width: '120px'
   },
   habitatIcon: {
     fontSize: '3rem',
@@ -206,7 +228,7 @@ const styles = {
     fontSize: '1.5rem',
     borderRadius: '50%',
     border: 'none',
-    background: '#6a11cb',
+    background: '#9966FF',
     color: 'white',
     cursor: 'pointer'
   },
@@ -224,7 +246,9 @@ const styles = {
     borderRadius: '50px',
     cursor: 'pointer',
     fontWeight: 'bold',
-    marginTop: '1rem'
+    marginTop: '1rem',
+    margin: "1rem auto",
+    display: "block"
   },
   meditationScreen: {
     backgroundColor: '#e6f7ff',
@@ -265,7 +289,7 @@ const styles = {
     position: 'fixed',
     bottom: '20px',
     left: '20px',
-    backgroundColor: '#6a11cb',
+    backgroundColor: '#9966FF',
     color: 'white',
     padding: '12px 20px',
     borderRadius: '30px',

@@ -68,7 +68,7 @@ export default function Dashboard() {
     <div
       style={{
         backgroundImage: `url(/assets/the-temple.png)`,
-        backgroundSize: "cover",
+        backgroundSize: "flex",
         backgroundPosition: "center",
         minHeight: "100vh",
         padding: "2rem",
@@ -159,7 +159,7 @@ const styles = {
   counter: {
     fontSize: "4rem",
     fontWeight: "bold",
-    color: "#6a11cb",
+    color: "#9966FF",
     margin: "0.5rem 0",
   },
   logoutButton: {
@@ -177,7 +177,7 @@ const styles = {
   },
   createButton: {
     padding: "12px 20px",
-    backgroundColor: "#66CC33",
+    backgroundColor: "#5bc0de",
     color: "white",
     border: "none",
     borderRadius: "50px",
