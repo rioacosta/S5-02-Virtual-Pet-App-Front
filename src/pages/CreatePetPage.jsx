@@ -270,7 +270,7 @@ const styles = {
     position: 'fixed',
     bottom: '20px',
     left: '20px',
-    backgroundColor: '#9966FF',
+    backgroundColor: '#5bc0de',
     color: 'white',
     padding: '12px 20px',
     borderRadius: '30px',

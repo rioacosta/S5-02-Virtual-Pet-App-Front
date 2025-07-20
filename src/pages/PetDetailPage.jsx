@@ -92,6 +92,21 @@ function PetDetailPage() {
   if (loading) return <div style={styles.loading}>Cargando...</div>;
   if (!pet) return <div style={styles.error}>Mascota no encontrada</div>;
 
+    function getAvatarByLevel(pet) {
+      if (Array.isArray(pet.avatarStages) && pet.avatarStages.length > 0) {
+        const index = Math.min((pet.level || 1) - 1, pet.avatarStages.length - 1);
+        const stage = pet.avatarStages[index];
+        if (stage) {
+          return stage;
+        }
+      }
+
+      if (pet.avatar) {
+        return `/assets/avatars/${pet.avatar}`;
+      }
+
+      return "/assets/avatars/the-gang.png";
+    }
   return (
       <div
         style={{
@@ -124,10 +139,14 @@ function PetDetailPage() {
 
                         {/* Imagen base */}
     	<img
-                src={`/assets/avatars/${pet.avatar || "the-gang.png"}`}
-                alt={pet.name}
-                style={styles.avatarBase}
-              />
+          src={getAvatarByLevel(pet)}
+          alt={pet.name}
+          style={styles.avatarBase}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/assets/avatars/the-gang.png";
+          }}
+        />
 
               {/* Capas de recompensas como accesorios */}
               {pet.rewards?.map((reward, index) => (
@@ -409,7 +428,7 @@ const styles = {
     position: 'fixed',
     bottom: '20px',
     left: '20px',
-    backgroundColor: '#9966FF',
+    backgroundColor: '#5bc0de',
     color: 'white',
     padding: '12px 20px',
     borderRadius: '30px',
