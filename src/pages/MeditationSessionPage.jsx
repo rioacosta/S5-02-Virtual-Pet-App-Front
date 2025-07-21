@@ -34,6 +34,12 @@ function MeditationSessionPage() {
     mountain: "Montañas serenas con vistas panorámicas y aire puro",
     space: "Vistas cósmicas de estrellas y planetas en la inmensidad del espacio"
   };
+  const habitatInspirations = {
+    forest: "🌲 Respira profundo. Siente cómo el bosque te abraza.",
+    beach: "🌊 Escucha las olas. Cada una limpia tus pensamientos.",
+    mountain: "⛰️ Observa la cima. Tu mente también puede llegar allí.",
+    space: "🚀 Flota libre. No hay gravedad para tus preocupaciones."
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -211,6 +217,9 @@ function MeditationSessionPage() {
             ...styles.meditationScreen,
             backgroundImage: `url(${habitatImages[habitat]})`
           }}>
+            <p style={styles.habitatInspiration}>
+                {habitatInspirations[habitat]}
+              </p>
             <div style={styles.timerOverlay}>{formatTime(timeLeft)}</div>
 
             <div style={styles.avatarAndButton}>
@@ -352,6 +361,15 @@ const styles = {
     textAlign: 'center',
     color: '#5a32a8'
   },
+  habitatInspiration: {
+  marginTop: '-30rem',
+  fontSize: '1.2rem',
+  color: '#555',
+  backgroundColor: 'rgba(255, 255, 255, 0.6)',
+  padding: '1rem',
+  borderRadius: '10px',
+  maxWidth: '600px'
+  },
   startButton: {
     padding: '15px 40px',
     fontSize: '1.2rem',
@@ -383,9 +401,7 @@ const styles = {
     overflow: 'hidden',
     margin: '0 auto',
     maxWidth: '900px',
-    boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
-    // Añade estas propiedades:
-    backgroundSize: 'cover',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.2)',    backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
   },
