@@ -117,7 +117,7 @@ const CreatePetPage = () => {
                 type="text"
                 value={petName}
                 onChange={(e) => setPetName(e.target.value)}
-                placeholder="Ej: Pepe, Pipo, Paco..."
+                placeholder="Ej: Flor, Pau, Serena, Pepe..."
                 maxLength={20}
                 style={styles.input}
                 disabled={isSubmitting}
