@@ -129,7 +129,7 @@ useEffect(() => {
         x: Math.random() * screenWidth, // Posición horizontal aleatoria
         bottom: 0, // Comienzan en la parte inferior
         size: 20 + Math.random() * 30,
-        speed: 1 + Math.random() * 3,
+        speed: 1 + Math.random() * 6,
       });
     }
 

@@ -20,6 +20,14 @@ function MeditationSessionPage() {
   const [isMeditating, setIsMeditating] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const navigate = useNavigate();
+  const [hearts, setHearts] = useState([]);
+  const startSound = new Audio('/assets/sounds/ending-sound.mp3');
+  const endSound = new Audio('/assets/sounds/ending-sound.mp3');
+
+  const backgroundSound = new Audio('/assets/sounds/background-meditation.mp3');
+  backgroundSound.loop = true;
+  backgroundSound.volume = 0.5; // puedes ajustar el volumen
+
 
   const habitatImages = {
     forest: "/assets/habitats/Woods.png",
@@ -52,9 +60,19 @@ function MeditationSessionPage() {
   }, [petId]);
 
   const startMeditation = () => {
-    setIsMeditating(true);
-    setTimeLeft(minutes * 60);
-  };
+    try {
+        startSound.currentTime = 0;
+        startSound.play();
+
+        backgroundSound.currentTime = 0;
+        backgroundSound.play();
+      } catch (e) {
+        console.warn('No se pudo reproducir el sonido:', e);
+      }
+    
+      setIsMeditating(true);
+      setTimeLeft(minutes * 60);
+    };
 
   useEffect(() => {
     let timer;
@@ -68,8 +86,34 @@ function MeditationSessionPage() {
     return () => clearInterval(timer);
   }, [isMeditating, timeLeft]);
 
+    const generateHearts = () => {
+    const newHearts = [];
+    const screenWidth = window.innerWidth;
+
+    for (let i = 0; i < 15; i++) {
+      newHearts.push({
+        id: Date.now() + i,
+        x: Math.random() * screenWidth,
+        bottom: 0,
+        size: 20 + Math.random() * 30,
+        speed: 1 + Math.random() * 20,
+      });
+    }
+
+    setHearts(newHearts);
+    setTimeout(() => setHearts([]), 3000);
+  };
+
   const finishMeditation = async () => {
-    setIsMeditating(false);
+    try {
+      endSound.currentTime = 0;
+      await endSound.play();
+    } catch (e) {
+      console.warn("No se pudo reproducir el sonido de finalización:", e);
+    }
+
+    generateHearts();
+
     const token = localStorage.getItem('token');
 
     try {
@@ -81,7 +125,13 @@ function MeditationSessionPage() {
         },
         body: JSON.stringify({ minutes, habitat })
       });
+
+    // ⏱ Esperar 3 segundos para mostrar los corazones antes de navegar
+    setTimeout(() => {
+      setIsMeditating(false);
       navigate(`/pet/${petId}`);
+    }, 11000);
+
     } catch (err) {
       console.error('Error al guardar meditación:', err);
     }
@@ -234,6 +284,31 @@ function MeditationSessionPage() {
               >
                 Finalizar Sesión
               </button>
+
+           {/*Aquí insertas el mensaje de transición */}
+           {hearts.length > 0 && (
+             <p style={{ color: '#5a32a8', marginTop: '1rem', fontSize: '1.1rem' }}>
+               ✨ Bien hecho. Regresando...
+             </p>
+           )}
+
+            {/* Animación de corazones */}
+             {hearts.map(heart => (
+               <div
+                 key={heart.id}
+                 style={{
+                   ...styles.heart,
+                   left: `${heart.x}px`,
+                   bottom: `${heart.bottom}px`,
+                   width: `${heart.size}px`,
+                   height: `${heart.size}px`,
+                   fontSize: `${heart.size}px`,
+                   animation: `floatUp ${heart.speed}s ease-out forwards`
+                 }}
+               >
+                 💙
+               </div>
+             ))}
             </div>
           </div>
         )}
@@ -436,6 +511,15 @@ const styles = {
     height: "auto",
     filter: 'drop-shadow(0 8px 15px rgba(0,0,0,0.3))'
   },
+  heart: {
+      position: 'fixed',
+      color: 'red',
+      textShadow: '0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7)',
+      zIndex: 2000,
+      pointerEvents: 'none',
+      userSelect: 'none',
+      animationFillMode: 'forwards'
+    },
   cancelButton: {
     padding: '12px 30px',
     background: 'linear-gradient(145deg, #ff4d4f, #cc3e40)',
@@ -471,5 +555,22 @@ const styles = {
     }
   }
 };
+// Insertar la animación CSS en el documento
+const styleElement = document.createElement('style');
+styleElement.textContent = `
+  @keyframes floatUp {
+    0% {
+      opacity: 1;
+      bottom: 0;
+      transform: translateY(0) rotate(0deg);
+    }
+    100% {
+      opacity: 0;
+      bottom: 100vh;
+      transform: translateY(0) rotate(360deg);
+    }
+  }
+`;
+document.head.appendChild(styleElement);
 
 export default MeditationSessionPage;

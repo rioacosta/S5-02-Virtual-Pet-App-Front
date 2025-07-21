@@ -15,8 +15,8 @@ const CreatePetPage = () => {
 
   const availablePets = [
     { id: 1, name: "", image: "public/assets/avatars/Luli.png" },
-    { id: 2, name: "", image: "public/assets/avatars/Lele.png" },
-    { id: 3, name: "", image: "public/assets/avatars/Lilo.png" },
+    { id: 2, name: "", image: "public/assets/avatars/Lilo.png" },
+    { id: 3, name: "", image: "public/assets/avatars/Lele.png" },
     { id: 4, name: "", image: "public/assets/avatars/Lolo.png" }
   ];
 
