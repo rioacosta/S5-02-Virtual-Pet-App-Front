@@ -138,7 +138,7 @@ export default function Dashboard() {
           borderRadius: '10px',
           maxWidth: '600px'
         }}>
-          🌟 Bienvenido a tu refugio virtual de calma y conexión. Esta app está diseñada para ayudarte a cultivar la atención plena, establecer rutinas de autocuidado, y compartir momentos zen con tus buddies.
+          🌟 Bienvenido a tu refugio virtual de calma y conexión. Esta app está diseñada para ayudarte a cultivar la atención plena, establecer rutinas de autocuidado y compartir momentos zen con tus buddies.
         </p>
         <button onClick={handleLogout} style={styles.logoutButton}>
           🔒 Cerrar sesión
