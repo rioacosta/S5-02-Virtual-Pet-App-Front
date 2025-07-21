@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
 function getAvatarByLevel(pet) {
-  if (!pet) return "/assets/avatarsMeditating/the-gang.png";
+  if (!pet) return "/assets/avatarsNOGB/the-gang.png";
 
   if (Array.isArray(pet.avatarStages) && pet.avatarStages.length > 0) {
     const index = Math.min((pet.level || 1) - 1, pet.avatarStages.length - 1);
     const fileName = pet.avatarStages[index]?.split('/').pop();
-    return `/assets/avatarsMeditating/${fileName}`;
+    return `/assets/avatarsNOBG/${fileName}`;
   }
-  return `/assets/avatarsMeditating/${pet.avatar || "the-gang.png"}`;
+  return `/assets/avatarsNOGB/${pet.avatar || "the-gang.png"}`;
 }
 
 function MeditationSessionPage() {
@@ -355,7 +355,7 @@ const styles = {
   startButton: {
     padding: '15px 40px',
     fontSize: '1.2rem',
-    background: 'linear-gradient(145deg, #4CAF50, #3d8b40)',
+    background: '#66CC66',
     color: 'white',
     border: 'none',
     borderRadius: '50px',
@@ -439,8 +439,7 @@ const styles = {
     position: 'fixed',
     bottom: '20px',
     left: '20px',
-    background: 'linear-gradient(145deg, #9966FF, #7a4fcc)',
-    color: 'white',
+    backgroundColor: '#5bc0de',    color: 'white',
     padding: '12px 25px',
     borderRadius: '30px',
     border: 'none',

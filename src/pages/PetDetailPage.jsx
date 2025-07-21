@@ -1,16 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function PetDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [pet, setPet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState('');
   const [hearts, setHearts] = useState([]);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [meditationHistory, setMeditationHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
   const avatarContainerRef = useRef(null);
 
-  // Cargar datos de la mascota
+// Cargar datos de la mascota
   useEffect(() => {
     const token = localStorage.getItem('token');
     fetch(`http://localhost:8080/api/pets/${id}`, {
@@ -29,6 +34,28 @@ function PetDetailPage() {
       });
   }, [id]);
 
+// Cargar historial de meditación
+useEffect(() => {
+  const fetchHistory = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`http://localhost:8080/api/pets/${id}/history`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log("👉 Historial recibido:", response.data);
+      setMeditationHistory(response.data);
+    } catch (error) {
+      console.error("❌ Error al cargar historial:", error);
+      // Aquí no puedes usar response porque solo está definida en el try
+      console.log("Error completo:", error);
+      setMeditationHistory([]); // Previene crash
+    }
+  };
+
+  fetchHistory();
+}, [id]); // Añade id como dependencia
   // Manejar edición del nombre
   const handleNameUpdate = () => {
     const token = localStorage.getItem('token');
@@ -67,6 +94,28 @@ function PetDetailPage() {
       .catch(err => console.error("Error al abrazar:", err));
   };
 
+  // Manejar eliminación de mascota
+  const handleDeletePet = () => {
+    const token = localStorage.getItem('token');
+
+    fetch(`http://localhost:8080/api/pets/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(response => {
+        if (response.ok) {
+          navigate('/dashboard');
+        } else {
+          console.error('Error al eliminar la mascota');
+          alert('No se pudo eliminar la mascota');
+        }
+      })
+      .catch(err => {
+        console.error('Error al eliminar:', err);
+        alert('Error al eliminar la mascota');
+      });
+  };
+
   // Generar corazones animados
   const generateHearts = () => {
     const newHearts = [];
@@ -80,193 +129,293 @@ function PetDetailPage() {
         bottom: 0, // Comienzan en la parte inferior
         size: 20 + Math.random() * 30,
         speed: 1 + Math.random() * 3,
-        //opacity: 1
       });
     }
 
     setHearts(newHearts);
-    //Limpiar corazones despues de reproducir
+    // Limpiar corazones después de reproducir
     setTimeout(() => setHearts([]), 3000);
+  };
+
+  // Formatear fecha para el historial
+  const formatDate = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    return new Date(dateString).toLocaleDateString('es-ES', options);
   };
 
   if (loading) return <div style={styles.loading}>Cargando...</div>;
   if (!pet) return <div style={styles.error}>Mascota no encontrada</div>;
 
-    function getAvatarByLevel(pet) {
-      if (Array.isArray(pet.avatarStages) && pet.avatarStages.length > 0) {
-        const index = Math.min((pet.level || 1) - 1, pet.avatarStages.length - 1);
-        const stage = pet.avatarStages[index];
-        if (stage) {
-          return stage;
-        }
+  function getAvatarByLevel(pet) {
+    if (Array.isArray(pet.avatarStages) && pet.avatarStages.length > 0) {
+      const index = Math.min((pet.level || 1) - 1, pet.avatarStages.length - 1);
+      const stage = pet.avatarStages[index];
+      if (stage) {
+        return stage;
       }
-
-      if (pet.avatar) {
-        return `/assets/avatars/${pet.avatar}`;
-      }
-
-      return "/assets/avatars/the-gang.png";
     }
+
+    if (pet.avatar) {
+      return `/assets/avatars/${pet.avatar}`;
+    }
+
+    return "/assets/avatars/the-gang.png";
+  }
+
   return (
+    <div
+      style={{
+        backgroundImage: `url(/assets/the-temple.png)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        padding: "2rem",
+        position: "relative"
+      }}
+    >
+      {/* Capa blanca semitransparente */}
       <div
         style={{
-          backgroundImage: `url(/assets/the-temple.png)`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          minHeight: "100vh",
-          padding: "2rem",
-          position: "relative"
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(255, 255, 255, 0.85)",
+          zIndex: 0,
+          pointerEvents: "none"
         }}
+      />
+
+      {/* Botón de eliminar en esquina superior derecha */}
+      <button
+        onClick={() => setShowDeleteConfirmation(true)}
+        style={styles.deleteButtonTop}
       >
-        {/* Capa blanca semitransparente */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(255, 255, 255, 0.85)",
-            zIndex: 0,
-            pointerEvents: "none"
-          }}
-        />
+        🗑️ Eliminar Mascota
+      </button>
 
-        {/* Contenido principal */}
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={styles.header}>
-            <div ref={avatarContainerRef} style={styles.avatarContainer}>
+      {/* Contenido principal */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <div style={styles.header}>
+          <div ref={avatarContainerRef} style={styles.avatarContainer}>
+            {/* Imagen base */}
+            <img
+              src={getAvatarByLevel(pet)}
+              alt={pet.name}
+              style={styles.avatarBase}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/assets/avatars/the-gang.png";
+              }}
+            />
 
-                        {/* Imagen base */}
-    	<img
-          src={getAvatarByLevel(pet)}
-          alt={pet.name}
-          style={styles.avatarBase}
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = "/assets/avatars/the-gang.png";
-          }}
-        />
+            {/* Capas de recompensas como accesorios */}
+            {pet.rewards?.map((reward, index) => (
+              <img
+                key={index}
+                src={`/assets/accessories/${reward}.png`}
+                alt={reward}
+                style={styles.accessoryLayer}
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            ))}
+          </div>
 
-              {/* Capas de recompensas como accesorios */}
-              {pet.rewards?.map((reward, index) => (
-                <img
-                  key={index}
-                  src={`/assets/accessories/${reward}.png`}
-                  alt={reward}
-                  style={styles.accessoryLayer}
-                  onError={(e) => { e.target.style.display = 'none'; }}
+          {/* Nombre editable */}
+          <div style={styles.nameContainer}>
+            {isEditing ? (
+              <div style={styles.editContainer}>
+                <input
+                  type="text"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  style={styles.nameInput}
+                  autoFocus
                 />
-              ))}
-            </div>
+                <button onClick={handleNameUpdate} style={styles.saveButton}>✓</button>
+                <button onClick={() => setIsEditing(false)} style={styles.cancelButton}>✕</button>
+              </div>
+            ) : (
+              <div style={styles.editContainer}>
+                <h1 style={styles.petName}>{pet.name}</h1>
+                <button onClick={() => setIsEditing(true)} style={styles.editButton} title="Editar nombre">✏️</button>
+              </div>
+            )}
+          </div>
 
-            {/* Nombre editable */}
-            <div style={styles.nameContainer}>
-              {isEditing ? (
-                <div style={styles.editContainer}>
-                  <input
-                    type="text"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    style={styles.nameInput}
-                    autoFocus
-                  />
-                  <button onClick={handleNameUpdate} style={styles.saveButton}>✓</button>
-                  <button onClick={() => setIsEditing(false)} style={styles.cancelButton}>✕</button>
-                </div>
+          {/* Botones de acciones */}
+          <div style={styles.actionButtons}>
+            <button onClick={handleHug} style={styles.hugButton}>
+              <span style={styles.hugIcon}>🤗</span> ABRAZAR
+            </button>
+            <Link to={`/meditate/${pet.id}`}>
+              <button style={styles.meditateButton}>
+                <span style={styles.meditateIcon}>🧘</span> MEDITAR
+              </button>
+            </Link>
+          </div>
+        </div>
+
+        <div style={styles.statsContainer}>
+          <div style={styles.statCard}>
+            <h3>Nivel</h3>
+            <p style={styles.statValue}>{pet.level || 1}</p>
+          </div>
+          <div style={styles.statCard}>
+            <h3>Experiencia</h3>
+            <p style={styles.statValue}>{pet.experience || 0} XP</p>
+          </div>
+          <div style={styles.statCard}>
+            <h3>Felicidad</h3>
+            <p style={styles.statValue}>{pet.happiness || 100}%</p>
+          </div>
+        </div>
+
+        <div style={styles.infoCard}>
+          <h2>Meditación Total</h2>
+          <p style={styles.meditationMinutes}>{pet.totalMeditationMinutes || 0} minutos</p>
+        </div>
+
+        {/* Sección de Historial de Sesiones */}
+        <div style={styles.historySection}>
+          <h2
+            style={styles.historyHeader}
+            onClick={() => setShowHistory(!showHistory)}
+          >
+            Historial de Sesiones
+            <span style={styles.historyToggle}>
+              {showHistory ? '▲' : '▼'}
+            </span>
+          </h2>
+
+          {showHistory && (
+            <div style={styles.historyContent}>
+              {meditationHistory.length === 0 ? (
+                <p>No hay sesiones registradas aún</p>
               ) : (
-                <div style={styles.editContainer}>
-                  <h1 style={styles.petName}>{pet.name}</h1>
-                  <button onClick={() => setIsEditing(true)} style={styles.editButton} title="Editar nombre">✏️</button>
-                </div>
+                <ul style={styles.historyList}>
+                  {meditationHistory.map((session, index) => (
+                    <li key={index} style={styles.historyItem}>
+                      <div>
+                        <strong>Fecha:</strong> {formatDate(session.date || session.sessionDate)}
+                      </div>
+                      <div>
+                        <strong>Duración:</strong> {session.minutes ?? session.duration ?? 0} minutos
+                      </div>
+                      <div>
+                        <strong>Hábitat:</strong> {session.habitat || 'Desconocido'}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
+          )}
+        </div>
 
-            {/* Botones de acciones */}
-            <div style={styles.actionButtons}>
-              <button onClick={handleHug} style={styles.hugButton}>
-                <span style={styles.hugIcon}>🤗</span> ABRAZAR
-              </button>
-              <Link to={`/meditate/${pet.id}`}>
-                <button style={styles.meditateButton}>
-                  <span style={styles.meditateIcon}>🧘</span> MEDITAR
+        {pet.rewards?.length > 0 && (
+          <div style={styles.rewardsSection}>
+            <h2>Premios Obtenidos</h2>
+            <div style={styles.rewardsContainer}>
+              {pet.rewards.map((reward, index) => (
+                <div key={index} style={styles.rewardItem}>
+                  <div style={styles.rewardIcon}>🏆</div>
+                  <p>{reward}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <Link to="/dashboard">
+          <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
+        </Link>
+
+        {/* Animación de corazones */}
+        {hearts.map(heart => (
+          <div
+            key={heart.id}
+            style={{
+              ...styles.heart,
+              left: `${heart.x}px`,
+              bottom: `${heart.bottom}px`,
+              width: `${heart.size}px`,
+              height: `${heart.size}px`,
+              fontSize: `${heart.size}px`,
+              animation: `floatUp ${heart.speed}s ease-out forwards`
+            }}
+          >
+            💙
+          </div>
+        ))}
+
+        {/* Modal de confirmación para eliminar */}
+        {showDeleteConfirmation && (
+          <div style={styles.confirmationModal}>
+            <div style={styles.modalContent}>
+              <h2>¿Eliminar a {pet.name}?</h2>
+              <p>Esta acción no se puede deshacer. ¿Estás seguro de que quieres eliminar permanentemente a tu mascota?</p>
+
+              <div style={styles.modalButtons}>
+                <button
+                  onClick={() => setShowDeleteConfirmation(false)}
+                  style={styles.cancelModalButton}
+                >
+                  Cancelar
                 </button>
-              </Link>
-            </div>
-          </div>
-
-          <div style={styles.statsContainer}>
-            <div style={styles.statCard}>
-              <h3>Nivel</h3>
-              <p style={styles.statValue}>{pet.level || 1}</p>
-            </div>
-            <div style={styles.statCard}>
-              <h3>Experiencia</h3>
-              <p style={styles.statValue}>{pet.experience || 0} XP</p>
-            </div>
-            <div style={styles.statCard}>
-              <h3>Felicidad</h3>
-              <p style={styles.statValue}>{pet.happiness || 100}%</p>
-            </div>
-          </div>
-
-          <div style={styles.infoCard}>
-            <h2>Meditación Total</h2>
-            <p style={styles.meditationMinutes}>{pet.totalMeditationMinutes || 0} minutos</p>
-          </div>
-
-          {pet.rewards?.length > 0 && (
-            <div style={styles.rewardsSection}>
-              <h2>Premios Obtenidos</h2>
-              <div style={styles.rewardsContainer}>
-                {pet.rewards.map((reward, index) => (
-                  <div key={index} style={styles.rewardItem}>
-                    <div style={styles.rewardIcon}>🏆</div>
-                    <p>{reward}</p>
-                  </div>
-                ))}
+                <button
+                  onClick={handleDeletePet}
+                  style={styles.confirmDeleteButton}
+                >
+                  Sí, eliminar
+                </button>
               </div>
             </div>
-          )}
-
-          <Link to="/dashboard">
-            <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
-          </Link>
-
-          {/* Animación de corazones */}
-
-          {hearts.map(heart => (
-            <div
-              key={heart.id}
-              style={{
-                ...styles.heart,
-                left: `${heart.x}px`,
-                bottom: `${heart.bottom}px`,
-                width: `${heart.size}px`,
-                height: `${heart.size}px`,
-                fontSize: `${heart.size}px`,
-                animation: `floatUp ${heart.speed}s ease-out forwards`
-              }}
-            >
-              💙
-            </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
-    );
-
+    </div>
+  );
 }
 
 const styles = {
   container: {
-      position: 'relative',
-      backgroundImage: 'url("/assets/the-temple.png")',
-      backgroundSize: 'flex',
-      backgroundPosition: 'center',
-      minHeight: '100vh',
-      padding: '2rem',
-      zIndex: 0
-    },
+    position: 'relative',
+    backgroundImage: 'url("/assets/the-temple.png")',
+    backgroundSize: 'flex',
+    backgroundPosition: 'center',
+    minHeight: '100vh',
+    padding: '2rem',
+    zIndex: 0
+  },
+  // Botón de eliminar en esquina superior derecha
+  deleteButtonTop: {
+    position: 'absolute',
+    top: '20px',
+    right: '20px',
+    backgroundColor: '#ff4d4f',
+    color: 'white',
+    padding: '10px 20px',
+    borderRadius: '30px',
+    border: 'none',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    zIndex: 100,
+    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+    transition: 'all 0.3s',
+    ':hover': {
+      backgroundColor: '#ff1d20',
+      transform: 'scale(1.05)'
+    }
+  },
   header: {
     textAlign: 'center',
     marginBottom: '2rem',
@@ -274,40 +423,38 @@ const styles = {
     borderRadius: '15px',
     background: 'rgba(255, 255, 255, 0.8)',
     boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
-    maxWidth: '400px',        // ← nuevo: limita el ancho
-    marginLeft: 'auto',       // ← centra horizontalmente
-    marginRight: 'auto'       // ← centra horizontalmente
+    maxWidth: '400px',
+    marginLeft: 'auto',
+    marginRight: 'auto'
   },
-  // CAMBIO CLAVE: Contenedor ovalado con enfoque en la parte superior
-    avatarContainer: {
-      position: 'relative',
-      width: '200px',  // Ancho aumentado para el óvalo
-      height: '240px', // Alto aumentado para el óvalo
-      margin: '0 auto',
-      marginBottom: '1.5rem',
-      borderRadius: '50% / 40%', // Forma ovalada (horizontal 50%, vertical 40%)
-      overflow: 'hidden', // Importante para recortar la imagen
-      border: '6px solid #9966FF',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
-    },
-    // CAMBIO CLAVE: Enfocar la parte superior de la imagen
-    avatarBase: {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-      objectPosition: 'top' // Muestra la parte superior de la imagen
-    },
-    accessoryLayer: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      pointerEvents: 'none',
-      zIndex: 10,
-      objectFit: 'cover',
-      objectPosition: 'top' // Asegura que los accesorios también se alineen arriba
-    },
+  avatarContainer: {
+    position: 'relative',
+    width: '200px',
+    height: '240px',
+    margin: '0 auto',
+    marginBottom: '1.5rem',
+    borderRadius: '50% / 40%',
+    overflow: 'hidden',
+    border: '6px solid #9966FF',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+  },
+  avatarBase: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    objectPosition: 'top'
+  },
+  accessoryLayer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none',
+    zIndex: 10,
+    objectFit: 'cover',
+    objectPosition: 'top'
+  },
   nameContainer: {
     margin: '1rem 0',
     minHeight: '60px'
@@ -389,8 +536,7 @@ const styles = {
     fontSize: '1rem',
     fontWeight: 'bold',
     cursor: 'pointer',
-    //display: 'flex',
-    alignItems: 'fixed',
+    alignItems: 'center',
     gap: '10px',
     transition: 'all 0.3s',
     boxShadow: '0 4px 8px rgba(255, 105, 180, 0.3)',
@@ -411,8 +557,7 @@ const styles = {
     fontSize: '1rem',
     fontWeight: 'bold',
     cursor: 'pointer',
-    //display: 'flex',
-    alignItems: 'fixed',
+    alignItems: 'center',
     gap: '10px',
     transition: 'all 0.3s',
     boxShadow: '0 4px 8px rgba(106, 17, 203, 0.3)',
@@ -483,6 +628,45 @@ const styles = {
     margin: '0.5rem 0',
     textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
   },
+  // Sección de historial de sesiones
+  historySection: {
+    backgroundColor: 'rgba(245, 245, 245, 0.9)',
+    borderRadius: '15px',
+    margin: '2rem auto',
+    maxWidth: '800px',
+    overflow: 'hidden',
+    boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+  },
+  historyHeader: {
+    backgroundColor: '#9966FF',
+    color: 'white',
+    padding: '15px 20px',
+    margin: 0,
+    cursor: 'pointer',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '1.4rem'
+  },
+  historyToggle: {
+    fontSize: '1.2rem'
+  },
+  historyContent: {
+    padding: '20px',
+    backgroundColor: 'white'
+  },
+  historyList: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0
+  },
+  historyItem: {
+    padding: '15px',
+    borderBottom: '1px solid #eee',
+    '&:last-child': {
+      borderBottom: 'none'
+    }
+  },
   rewardsSection: {
     backgroundColor: 'rgba(255, 247, 230, 0.9)',
     borderRadius: '15px',
@@ -530,6 +714,61 @@ const styles = {
     pointerEvents: 'none',
     userSelect: 'none',
     animationFillMode: 'forwards'
+  },
+  // Estilos para el modal de confirmación
+  confirmationModal: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 3000
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: '2rem',
+    borderRadius: '15px',
+    maxWidth: '500px',
+    width: '90%',
+    textAlign: 'center'
+  },
+  modalButtons: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '1rem',
+    marginTop: '1.5rem'
+  },
+  cancelModalButton: {
+    padding: '12px 25px',
+    backgroundColor: '#999',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    fontSize: '1rem',
+    transition: 'all 0.3s',
+    ':hover': {
+      backgroundColor: '#777'
+    }
+  },
+  confirmDeleteButton: {
+    padding: '12px 25px',
+    backgroundColor: '#ff4d4f',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    fontSize: '1rem',
+    transition: 'all 0.3s',
+    ':hover': {
+      backgroundColor: '#ff1d20'
+    }
   }
 };
 
