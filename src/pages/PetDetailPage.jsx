@@ -46,6 +46,7 @@ useEffect(() => {
       });
       console.log("👉 Historial recibido:", response.data);
       setMeditationHistory(response.data);
+      console.log(meditationHistory)
     } catch (error) {
       console.error("❌ Error al cargar historial:", error);
       // Aquí no puedes usar response porque solo está definida en el try
@@ -400,7 +401,7 @@ const styles = {
     position: 'absolute',
     top: '20px',
     right: '20px',
-    backgroundColor: '#ff4d4f',
+    backgroundColor: '#FF6666',
     color: 'white',
     padding: '10px 20px',
     borderRadius: '30px',
