@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Añadimos Link
 import { isTokenExpired } from "../utils/authUtils";
 import {
   fetchUsersWithPets,
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
     navigate("/dashboard");
   };
 
-return (
+  return (
     <div
       style={{
         backgroundImage: `url(/assets/the-temple.png)`,
@@ -134,19 +134,29 @@ return (
 
             <div style={cardStyles.petsGroup}>
               {user.pets.map(pet => (
-                <div key={pet.id} style={cardStyles.petCard}>
-                  <img
-                    src={getAvatarByLevel(pet)}
-                    alt={pet.name}
-                    style={cardStyles.petImage}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "/assets/avatars/the-gang.png";
-                    }}
-                  />
-                  <h4>{pet.name}</h4>
-                  <p>Nivel {pet.level}</p>
-                </div>
+
+                // Envolvemos cada tarjeta de mascota en un <a> para que abra nueva pagina
+                <a
+                  href={`/pet/${pet.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  key={pet.id}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <div style={cardStyles.petCard}>
+                    <img
+                      src={getAvatarByLevel(pet)}
+                      alt={pet.name}
+                      style={cardStyles.petImage}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/assets/avatars/the-gang.png";
+                      }}
+                    />
+                    <h4>{pet.name}</h4>
+                    <p>Nivel {pet.level}</p>
+                  </div>
+                </a>
               ))}
             </div>
           </div>

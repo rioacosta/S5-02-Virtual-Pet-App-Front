@@ -8,6 +8,11 @@ export default function Dashboard() {
   const [totalMinutes, setTotalMinutes] = useState(0);
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
+  const [showEditPanel, setShowEditPanel] = useState(false);
+  const [newUsername, setNewUsername] = useState(userData?.username || '');
+  const [newEmail, setNewEmail] = useState(userData?.email || '');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -63,6 +68,41 @@ export default function Dashboard() {
     localStorage.removeItem("roles");
     window.location.href = "/";
   };
+  const handleUserUpdate = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      await fetch("http://localhost:8080/api/v1/users/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...userData,
+          username: newUsername,
+          email: newEmail
+        })
+      });
+      alert("✅ Datos actualizados");
+    } catch (err) {
+      console.error("Error actualizando datos:", err);
+      alert("❌ Error al actualizar");
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      await fetch(`http://localhost:8080/api/v1/users/change-password?oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert("🔐 Contraseña actualizada");
+    } catch (err) {
+      console.error("Error al cambiar contraseña:", err);
+      alert("❌ Error al cambiar contraseña");
+    }
+  };
 
   return (
     <div
@@ -89,9 +129,40 @@ export default function Dashboard() {
 
       <div style={{ position: "relative", zIndex: 1 }}>
         <h1>{userData?.username || ""} este es tu espacio de paz 🧘</h1>
+        <p style={{
+          marginTop: '0.5rem',
+          fontSize: '1.2rem',
+          color: '#555',
+          backgroundColor: 'rgba(255, 255, 255, 0.6)',
+          padding: '1rem',
+          borderRadius: '10px',
+          maxWidth: '600px'
+        }}>
+          🌟 Bienvenido a tu refugio virtual de calma y conexión. Esta app está diseñada para ayudarte a cultivar la atención plena, establecer rutinas de autocuidado, y compartir momentos zen con tus buddies.
+        </p>
         <button onClick={handleLogout} style={styles.logoutButton}>
           🔒 Cerrar sesión
         </button>
+        <button
+          onClick={() => setShowEditPanel(prev => !prev)}
+          style={{ ...styles.logoutButton, top: '65px', backgroundColor: '#4CAF50' }}
+        >
+          ⚙️ Editar Perfil
+        </button>
+
+        {showEditPanel && (
+          <div style={{ marginTop: '1rem', background: '#fff', padding: '1rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+            <h3>Actualizar Datos</h3>
+            <input type="text" placeholder="Nuevo nombre" value={newUsername} onChange={e => setNewUsername(e.target.value)} />
+            <input type="email" placeholder="Nuevo correo" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
+            <button onClick={handleUserUpdate}>Guardar cambios</button>
+
+            <h4 style={{ marginTop: '1rem' }}>Cambiar contraseña</h4>
+            <input type="password" placeholder="Contraseña actual" value={oldPassword} onChange={e => setOldPassword(e.target.value)} />
+            <input type="password" placeholder="Nueva contraseña" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+            <button onClick={handlePasswordChange}>Cambiar contraseña</button>
+          </div>
+        )}
 
         <div style={styles.meditationCounter}>
           <h2>Tu Tiempo Total Meditado</h2>
