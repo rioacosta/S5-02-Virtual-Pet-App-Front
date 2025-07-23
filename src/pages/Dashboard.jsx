@@ -255,7 +255,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "1rem",
     fontWeight: "bold",
-    display: "block",
+    //display: "block",
     margin: "0 auto",
   },
   petsContainer: {

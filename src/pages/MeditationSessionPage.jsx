@@ -15,7 +15,7 @@ function getAvatarByLevel(pet) {
 function MeditationSessionPage() {
   const { petId } = useParams();
   const [pet, setPet] = useState(null);
-  const [habitat, setHabitat] = useState('forest');
+  const [habitat, setHabitat] = useState('space');
   const [minutes, setMinutes] = useState(10);
   const [isMeditating, setIsMeditating] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -24,12 +24,28 @@ function MeditationSessionPage() {
   const startSound = new Audio('/assets/sounds/ending-sound.mp3');
   const endSound = new Audio('/assets/sounds/ending-sound.mp3');
 
-  const backgroundSound = new Audio('/assets/sounds/background-meditation.mp3');
+  /*const backgroundSound = new Audio('/assets/sounds/background-meditation.mp3');
   backgroundSound.loop = true;
-  backgroundSound.volume = 0.5; // puedes ajustar el volumen
+  backgroundSound.volume = 0.5;*/
 
+  const habitatIcon = {
+    base_chakra_icon: "/assets/chakras/Chakra_Base.png",
+    sacral_chakra_icon: "/assets/chakras/Chakra_Sacral.png",
+    plexus_chakra_icon: "/assets/chakras/Chakra_Plexus.png",
+    heart_chakra_icon: "/assets/chakras/Chakra_Heart.png",
+    throat_chakra_icon: "/assets/chakras/Chakra_Throat.png",
+    third_eye_chakra_icon: "/assets/chakras/Chakra_Third_Eye.png",
+    crown_chakra_icon: "/assets/chakras/Chakra_Crown.png",
+  };
 
   const habitatImages = {
+    base_chakra: "/assets/habitats/1Mount_Shasta.png",
+    sacral_chakra: "/assets/habitats/2Titikaka_Lake.png",
+    plexus_chakra: "/assets/habitats/3Uluru.png",
+    heart_chakra: "/assets/habitats/4Chalice_Well.png",
+    throat_chakra: "/assets/habitats/5Giza_Piramid.png",
+    third_eye_chakra: "/assets/habitats/6Gunung_Agung.png",
+    crown_chakra: "/assets/habitats/7Mount_Kailash.png",
     forest: "/assets/habitats/Woods.png",
     beach: "/assets/habitats/Beach.png",
     mountain: "/assets/habitats/Mountain.png",
@@ -37,12 +53,26 @@ function MeditationSessionPage() {
   };
 
   const habitatDescriptions = {
+    base_chakra: "El Monte Shasta es la cola del dragón, el Monte Rainer es su boca o cabeza. Esta es la base del sistema energético del planeta.",
+    sacral_chakra: "Lago Titikaka este es el centro mundial de la creación de nuevas especies y los avances evolutivos significativos de las especies existentes.",
+    plexus_chakra: "Uluru desde donde emerge la voz de la Tierra, es único entre los centros sagrados planetarios.",
+    heart_chakra: "Chalice Well, ubicado en Glastonbury, Somerset, es conocido como uno de los lugares más místicos y espirituales de Inglaterra.",
+    throat_chakra: "Giza es considerado como el chakra de la garganta; lugar de donde emerge la voz de la Tierra. Este chakra es vital para la estructura de la Tierra.",
+    third_eye_chakra: "El Monte Agung, este volcán a menudo llamado el techo de Bali, ofrece impresionantes panoramas y una belleza natural sagrada. Como centro espiritual de los hindúes en la Isla de los Mil Templos.",
+    crown_chakra: "Kailash es la montaña más sagrada de los Himalayas y es el centro del Chakra Coronario Terrestre.",
     forest: "Un bosque tranquilo con sonidos de pájaros y brisa suave",
     beach: "Playa relajante con olas suaves y brisa marina",
     mountain: "Montañas serenas con vistas panorámicas y aire puro",
     space: "Vistas cósmicas de estrellas y planetas en la inmensidad del espacio"
   };
   const habitatInspirations = {
+    base_chakra: "Piensa en mares rojos.",
+    sacral_chakra: "Algunas palabras.",
+    plexus_chakra: "Algunas palabras.",
+    heart_chakra: "Algunas palabras.",
+    throat_chakra: "Algunas palabras.",
+    third_eye_chakra: "Algunas palabras.",
+    crown_chakra: "Algunas palabras.",
     forest: "🌲 Respira profundo. Siente cómo el bosque te abraza.",
     beach: "🌊 Escucha las olas. Cada una limpia tus pensamientos.",
     mountain: "⛰️ Observa la cima. Tu mente también puede llegar allí.",
@@ -147,7 +177,7 @@ function MeditationSessionPage() {
     <div
       style={{
         backgroundImage: `url(/assets/the-temple.png)`,
-        backgroundSize: "cover",
+        backgroundSize: "fixed",
         backgroundPosition: "center",
         minHeight: "100vh",
         padding: "2rem",
@@ -200,9 +230,9 @@ function MeditationSessionPage() {
             </div>
 
             <div style={styles.selectionCard}>
-              <h2>Selecciona un Hábitat</h2>
+              <h2>SELECCIONA UN DESTINO PARA TU SESIÓN</h2>
               <div style={styles.habitatOptions}>
-                {['forest', 'beach', 'mountain', 'space'].map((hab) => (
+                {['base_chakra', 'sacral_chakra', 'plexus_chakra', 'heart_chakra', 'throat_chakra', 'third_eye_chakra', 'crown_chakra', 'forest', 'beach', 'mountain', 'space'].map((hab) => (
                   <div
                     key={hab}
                     style={{
@@ -213,6 +243,34 @@ function MeditationSessionPage() {
                     onClick={() => setHabitat(hab)}
                   >
                     <div style={styles.habitatIcon}>
+                      {hab === 'base_chakra' && <img src={habitatIcon.base_chakra_icon}
+                                                    alt="Base Chakra"
+                                                    style={{ width: '3rem', height: '3rem' }}
+                                                  />}
+                      {hab === 'sacral_chakra' && <img src={habitatIcon.sacral_chakra_icon}
+                                                    alt="Sacral Chakra"
+                                                    style={{ width: '3rem', height: '3rem' }}
+                                                  />}
+                      {hab === 'plexus_chakra' && <img src={habitatIcon.plexus_chakra_icon}
+                                                    alt="Plexus Chakra"
+                                                    style={{ width: '3rem', height: '3rem' }}
+                                                  />}
+                      {hab === 'heart_chakra' && <img src={habitatIcon.heart_chakra_icon}
+                                                    alt="Heart Chakra"
+                                                    style={{ width: '3rem', height: '3rem' }}
+                                                  />}
+                      {hab === 'throat_chakra' && <img src={habitatIcon.throat_chakra_icon}
+                                                       alt="Throat Chakra"
+                                                       style={{ width: '3rem', height: '3rem' }}
+                                                    />}
+                      {hab === 'third_eye_chakra' && <img src={habitatIcon.third_eye_chakra_icon}
+                                                       alt="Throat Chakra"
+                                                       style={{ width: '3rem', height: '3rem' }}
+                                                    />}
+                      {hab === 'crown_chakra' && <img src={habitatIcon.crown_chakra_icon}
+                                                       alt="Throat Chakra"
+                                                       style={{ width: '3rem', height: '3rem' }}
+                                                    />}
                       {hab === 'forest' && '🌲'}
                       {hab === 'beach' && '🏖️'}
                       {hab === 'mountain' && '⛰️'}
@@ -220,10 +278,17 @@ function MeditationSessionPage() {
                     </div>
 
                     <p style={styles.habitatName}>
-                      {hab === 'forest' && 'Bosque'}
-                      {hab === 'beach' && 'Playa'}
-                      {hab === 'mountain' && 'Montaña'}
-                      {hab === 'space' && 'Espacio'}
+                      {hab === 'base_chakra' && 'Chakra Base Terrestre'}
+                      {hab === 'sacral_chakra' && 'Chakra Sacro Terrestre'}
+                      {hab === 'plexus_chakra' && 'Chakra Plexo Solar Terrestre'}
+                      {hab === 'heart_chakra' && 'Chakra Corazón Terrestre'}
+                      {hab === 'throat_chakra' && 'Chakra Laríngeo Terrestre'}
+                      {hab === 'third_eye_chakra' && 'Chakra Tercer Ojo Terrestre'}
+                      {hab === 'crown_chakra' && 'Chakra Coronario Terrestre'}
+                      {hab === 'forest' && 'Bosque Vivo'}
+                      {hab === 'beach' && 'Playa Fresca'}
+                      {hab === 'mountain' && 'Montaña Mistica'}
+                      {hab === 'space' && 'Espacio Sideral'}
                     </p>
                   </div>
                 ))}
@@ -344,7 +409,8 @@ const styles = {
   },
   previewOverlay: {
     position: 'absolute',
-    top: 0,
+    //top: auto,
+    bottom: 0,
     left: 0,
     right: 0,
     padding: '10px',
@@ -476,9 +542,11 @@ const styles = {
     overflow: 'hidden',
     margin: '0 auto',
     maxWidth: '900px',
-    boxShadow: '0 10px 30px rgba(0,0,0,0.2)',    backgroundSize: 'cover',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+    backgroundSize: 'contain',
     backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat'
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: '100% 100%'  // Estira la imagen para llenar el contenedor
   },
   timerOverlay: {
     position: "absolute",
