@@ -1,19 +1,19 @@
-// src/pages/CreatePetPage.jsx
+// src/pages/CreateBuddyPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 
-const CreatePetPage = () => {
+const CreateBuddyPage = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
-  const [petName, setPetName] = useState('');
-  const [selectedPet, setSelectedPet] = useState(null);
+  const [buddyName, setBuddyName] = useState('');
+  const [selectedBuddy, setSelectedBuddy] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const availablePets = [
+  const availableBuddys = [
     { id: 1, name: "", image: "public/assets/avatars/Luli.png" },
     { id: 2, name: "", image: "public/assets/avatars/Lilo.png" },
     { id: 3, name: "", image: "public/assets/avatars/Lele.png" },
@@ -23,12 +23,12 @@ const CreatePetPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!petName.trim()) {
+    if (!buddyName.trim()) {
       setError("¡Por favor ingresa un nombre para tu buddy!");
       return;
     }
 
-    if (!selectedPet) {
+    if (!selectedBuddy) {
       setError("¡Selecciona un buddy primero!");
       return;
     }
@@ -39,15 +39,15 @@ const CreatePetPage = () => {
     try {
       const token = localStorage.getItem('token');
 
-      const response = await fetch('http://localhost:8080/api/pets', {
+      const response = await fetch('http://localhost:8080/api/buddys/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          name: petName,
-          avatar: selectedPet.image,
+          name: buddyName,
+          avatar: selectedBuddy.image,
           ownerId: userId
         })
       });
@@ -115,37 +115,37 @@ const CreatePetPage = () => {
               <label style={styles.label}>Nombre de tu Buddy:</label>
               <input
                 type="text"
-                value={petName}
-                onChange={(e) => setPetName(e.target.value)}
+                value={buddyName}
+                onChange={(e) => setBuddyName(e.target.value)}
                 placeholder="Ej: Flor, Pau, Serena, Pepe..."
                 maxLength={20}
                 style={styles.input}
                 disabled={isSubmitting}
               />
-              <small style={styles.counter}>{petName.length}/20 caracteres</small>
+              <small style={styles.counter}>{buddyName.length}/20 caracteres</small>
             </div>
 
             <div style={styles.formGroup}>
               <label style={styles.label}>Selecciona un Buddy:</label>
-              <div style={styles.petsGrid}>
-                {availablePets.map(pet => (
+              <div style={styles.buddysGrid}>
+                {availableBuddys.map(buddy => (
                   <div
-                    key={pet.id}
+                    key={buddy.id}
                     style={{
-                      ...styles.petOption,
-                      borderColor: selectedPet?.id === pet.id ? '#6a11cb' : '#ddd',
-                      transform: selectedPet?.id === pet.id ? 'scale(1.05)' : 'scale(1)'
+                      ...styles.buddyOption,
+                      borderColor: selectedBuddy?.id === buddy.id ? '#6a11cb' : '#ddd',
+                      transform: selectedBuddy?.id === buddy.id ? 'scale(1.05)' : 'scale(1)'
                     }}
-                    onClick={() => setSelectedPet(pet)}
+                    onClick={() => setSelectedBuddy(buddy)}
                   >
-                    <div style={styles.petImageContainer}>
+                    <div style={styles.buddyImageContainer}>
                       <img
-                        src={pet.image.replace('public/', '/')}
-                        alt={pet.name}
-                        style={styles.petImage}
+                        src={buddy.image.replace('public/', '/')}
+                        alt={buddy.name}
+                        style={styles.buddyImage}
                       />
                     </div>
-                    <p style={styles.petName}>{pet.name}</p>
+                    <p style={styles.buddyName}>{buddy.name}</p>
                   </div>
                 ))}
               </div>
@@ -175,7 +175,6 @@ const CreatePetPage = () => {
 
 };
 
-// Estilos mejorados
 const styles = {
   container: {
     display: 'flex',
@@ -232,13 +231,13 @@ const styles = {
     color: '#888',
     fontSize: '0.85rem'
   },
-  petsGrid: {
+  buddyGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
     gap: '1.5rem',
     marginTop: '0.5rem'
   },
-  petOption: {
+  buddyOption: {
     border: '2px solid #ddd',
     borderRadius: '12px',
     padding: '1rem',
@@ -249,19 +248,19 @@ const styles = {
       backgroundColor: '#f0f0f0'
     }
   },
-  petImageContainer: {
+  buddyImageContainer: {
     height: '120px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: '0.8rem'
   },
-  petImage: {
+  buddyImage: {
     maxHeight: '100%',
     maxWidth: '100%',
     objectFit: 'contain'
   },
-  petName: {
+  buddyName: {
     fontWeight: '600',
     color: '#333',
     margin: 0
@@ -329,4 +328,4 @@ document.head.insertAdjacentHTML(
   '<style>@keyframes spin {0% { transform: rotate(0deg); }100% { transform: rotate(360deg); }}</style>'
 );
 
-export default CreatePetPage;
+export default CreateBuddyPage;

@@ -2,14 +2,14 @@
 const ADMIN_API =
   (import.meta.env.VITE_API_BASE_URL || "http://localhost:8080") + "/api/admin";
 
-export interface PetDTO {
+export interface BuddysDTO {
   id: string;
   name: string;
   level: number;
   avatarUrl?: string;
 }
 
-export interface AdminUserWithPetsDTO {
+export interface AdminUserWithBuddysDTO {
   id: string;
   username: string;
   email: string;
@@ -17,12 +17,12 @@ export interface AdminUserWithPetsDTO {
   roles: string[];
   createdAt: string;
   lastLogin?: string;
-  pets: PetDTO[];
+  Buddys: BuddysDTO[];
 }
 
-export async function fetchUsersWithPets(): Promise<AdminUserWithPetsDTO[]> {
+export async function fetchUsersWithBuddys(): Promise<AdminUserWithBuddysDTO[]> {
   const token = localStorage.getItem("token");
-  const res = await fetch(`${ADMIN_API}/users-with-pets`, {
+  const res = await fetch(`${ADMIN_API}/users-with-buddys`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Error al cargar usuarios");

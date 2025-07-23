@@ -2,10 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function PetDetailPage() {
+function BuddyDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [pet, setPet] = useState(null);
+  const [buddy, setBuddy] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState('');
@@ -15,21 +15,21 @@ function PetDetailPage() {
   const [showHistory, setShowHistory] = useState(false);
   const avatarContainerRef = useRef(null);
 
-// Cargar datos de la mascota
+// Cargar datos del buddy
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:8080/api/pets/${id}`, {
+    fetch(`http://localhost:8080/api/buddys/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
       .then(data => {
-        console.log("🐶 Pet data:", data);
-        setPet(data);
+        console.log("🐶 Buddy data:", data);
+        setBuddy(data);
         setNewName(data.name);
         setLoading(false);
       })
       .catch(err => {
-        console.error("Error al cargar mascota:", err);
+        console.error("Error al cargar buddy:", err);
         setLoading(false);
       });
   }, [id]);
@@ -39,7 +39,7 @@ useEffect(() => {
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:8080/api/pets/${id}/history`, {
+      const response = await axios.get(`http://localhost:8080/api/buddys/${id}/history`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -49,28 +49,28 @@ useEffect(() => {
       console.log(meditationHistory)
     } catch (error) {
       console.error("❌ Error al cargar historial:", error);
-      // Aquí no puedes usar response porque solo está definida en el try
       console.log("Error completo:", error);
-      setMeditationHistory([]); // Previene crash
+      setMeditationHistory([]);
     }
   };
 
   fetchHistory();
-}, [id]); // Añade id como dependencia
+}, [id]);
+
   // Manejar edición del nombre
   const handleNameUpdate = () => {
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:8080/api/pets/${id}`, {
+    fetch(`http://localhost:8080/api/buddys/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ ...pet, name: newName })
+      body: JSON.stringify({ ...buddy, name: newName })
     })
       .then(res => res.json())
-      .then(updatedPet => {
-        setPet(updatedPet);
+      .then(updatedBuddy => {
+        setBuddy(updatedBuddy);
         setIsEditing(false);
       })
       .catch(err => console.error("Error actualizando nombre:", err));
@@ -80,26 +80,23 @@ useEffect(() => {
   const handleHug = () => {
     const token = localStorage.getItem('token');
 
-    // Llamada al endpoint
-    fetch(`http://localhost:8080/api/pets/${id}/hug`, {
+    fetch(`http://localhost:8080/api/buddys/${id}/hug`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
-      .then(updatedPet => {
-        setPet(updatedPet);
-
-        // Generar corazones animados
+      .then(updatedBuddy => {
+        setBuddy(updatedBuddy);
         generateHearts();
       })
       .catch(err => console.error("Error al abrazar:", err));
   };
 
-  // Manejar eliminación de mascota
-  const handleDeletePet = () => {
+  // Manejar eliminación de buddy
+  const handleDeleteBuddy = () => {
     const token = localStorage.getItem('token');
 
-    fetch(`http://localhost:8080/api/pets/${id}`, {
+    fetch(`http://localhost:8080/api/buddys/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -107,13 +104,13 @@ useEffect(() => {
         if (response.ok) {
           navigate('/dashboard');
         } else {
-          console.error('Error al eliminar la mascota');
-          alert('No se pudo eliminar la mascota');
+          console.error('Error al eliminar el buddy');
+          alert('No se pudo eliminar el buddy');
         }
       })
       .catch(err => {
         console.error('Error al eliminar:', err);
-        alert('Error al eliminar la mascota');
+        alert('Error al eliminar el buddy');
       });
   };
 
@@ -122,19 +119,17 @@ useEffect(() => {
     const newHearts = [];
     const screenWidth = window.innerWidth;
 
-    // Generar corazones en la parte inferior de la pantalla
     for (let i = 0; i < 15; i++) {
       newHearts.push({
         id: Date.now() + i,
-        x: Math.random() * screenWidth, // Posición horizontal aleatoria
-        bottom: 0, // Comienzan en la parte inferior
+        x: Math.random() * screenWidth,
+        bottom: 0,
         size: 20 + Math.random() * 30,
         speed: 1 + Math.random() * 6,
       });
     }
 
     setHearts(newHearts);
-    // Limpiar corazones después de reproducir
     setTimeout(() => setHearts([]), 3000);
   };
 
@@ -151,19 +146,19 @@ useEffect(() => {
   };
 
   if (loading) return <div style={styles.loading}>Cargando...</div>;
-  if (!pet) return <div style={styles.error}>Mascota no encontrada</div>;
+  if (!buddy) return <div style={styles.error}>Buddy no encontrado</div>;
 
-  function getAvatarByLevel(pet) {
-    if (Array.isArray(pet.avatarStages) && pet.avatarStages.length > 0) {
-      const index = Math.min((pet.level || 1) - 1, pet.avatarStages.length - 1);
-      const stage = pet.avatarStages[index];
+  function getAvatarByLevel(buddy) {
+    if (Array.isArray(buddy.avatarStages) && buddy.avatarStages.length > 0) {
+      const index = Math.min((buddy.level || 1) - 1, buddy.avatarStages.length - 1);
+      const stage = buddy.avatarStages[index];
       if (stage) {
         return stage;
       }
     }
 
-    if (pet.avatar) {
-      return `/assets/avatars/${pet.avatar}`;
+    if (buddy.avatar) {
+      return `/assets/avatars/${buddy.avatar}`;
     }
 
     return "/assets/avatars/the-gang.png";
@@ -180,7 +175,6 @@ useEffect(() => {
         position: "relative"
       }}
     >
-      {/* Capa blanca semitransparente */}
       <div
         style={{
           position: "absolute",
@@ -194,22 +188,19 @@ useEffect(() => {
         }}
       />
 
-      {/* Botón de eliminar en esquina superior derecha */}
       <button
         onClick={() => setShowDeleteConfirmation(true)}
         style={styles.deleteButtonTop}
       >
-        🗑️ Eliminar Mascota
+        🗑️ Eliminar Buddy
       </button>
 
-      {/* Contenido principal */}
       <div style={{ position: "relative", zIndex: 1 }}>
         <div style={styles.header}>
           <div ref={avatarContainerRef} style={styles.avatarContainer}>
-            {/* Imagen base */}
             <img
-              src={getAvatarByLevel(pet)}
-              alt={pet.name}
+              src={getAvatarByLevel(buddy)}
+              alt={buddy.name}
               style={styles.avatarBase}
               onError={(e) => {
                 e.target.onerror = null;
@@ -217,8 +208,7 @@ useEffect(() => {
               }}
             />
 
-            {/* Capas de recompensas como accesorios */}
-            {pet.rewards?.map((reward, index) => (
+            {buddy.rewards?.map((reward, index) => (
               <img
                 key={index}
                 src={`/assets/accessories/${reward}.png`}
@@ -229,7 +219,6 @@ useEffect(() => {
             ))}
           </div>
 
-          {/* Nombre editable */}
           <div style={styles.nameContainer}>
             {isEditing ? (
               <div style={styles.editContainer}>
@@ -245,18 +234,17 @@ useEffect(() => {
               </div>
             ) : (
               <div style={styles.editContainer}>
-                <h1 style={styles.petName}>{pet.name}</h1>
+                <h1 style={styles.buddyName}>{buddy.name}</h1>
                 <button onClick={() => setIsEditing(true)} style={styles.editButton} title="Editar nombre">✏️</button>
               </div>
             )}
           </div>
 
-          {/* Botones de acciones */}
           <div style={styles.actionButtons}>
             <button onClick={handleHug} style={styles.hugButton}>
               <span style={styles.hugIcon}>🤗</span> ABRAZAR
             </button>
-            <Link to={`/meditate/${pet.id}`}>
+            <Link to={`/meditate/${buddy.id}`}>
               <button style={styles.meditateButton}>
                 <span style={styles.meditateIcon}>🧘</span> MEDITAR
               </button>
@@ -267,24 +255,23 @@ useEffect(() => {
         <div style={styles.statsContainer}>
           <div style={styles.statCard}>
             <h3>Nivel</h3>
-            <p style={styles.statValue}>{pet.level || 1}</p>
+            <p style={styles.statValue}>{buddy.level || 1}</p>
           </div>
           <div style={styles.statCard}>
             <h3>Experiencia</h3>
-            <p style={styles.statValue}>{pet.experience || 0} XP</p>
+            <p style={styles.statValue}>{buddy.experience || 0} XP</p>
           </div>
           <div style={styles.statCard}>
             <h3>Felicidad</h3>
-            <p style={styles.statValue}>{pet.happiness || 100}%</p>
+            <p style={styles.statValue}>{buddy.happiness || 100}%</p>
           </div>
         </div>
 
         <div style={styles.infoCard}>
           <h2>Meditación Total</h2>
-          <p style={styles.meditationMinutes}>{pet.totalMeditationMinutes || 0} minutos</p>
+          <p style={styles.meditationMinutes}>{buddy.totalMeditationMinutes || 0} minutos</p>
         </div>
 
-        {/* Sección de Historial de Sesiones */}
         <div style={styles.historySection}>
           <h2
             style={styles.historyHeader}
@@ -321,11 +308,11 @@ useEffect(() => {
           )}
         </div>
 
-        {pet.rewards?.length > 0 && (
+        {buddy.rewards?.length > 0 && (
           <div style={styles.rewardsSection}>
             <h2>Premios Obtenidos</h2>
             <div style={styles.rewardsContainer}>
-              {pet.rewards.map((reward, index) => (
+              {buddy.rewards.map((reward, index) => (
                 <div key={index} style={styles.rewardItem}>
                   <div style={styles.rewardIcon}>🏆</div>
                   <p>{reward}</p>
@@ -339,7 +326,6 @@ useEffect(() => {
           <button style={styles.floatingBackButton}>⬅ Volver al Dashboard</button>
         </Link>
 
-        {/* Animación de corazones */}
         {hearts.map(heart => (
           <div
             key={heart.id}
@@ -357,12 +343,11 @@ useEffect(() => {
           </div>
         ))}
 
-        {/* Modal de confirmación para eliminar */}
         {showDeleteConfirmation && (
           <div style={styles.confirmationModal}>
             <div style={styles.modalContent}>
-              <h2>¿Eliminar a {pet.name}?</h2>
-              <p>Esta acción no se puede deshacer. ¿Estás seguro de que quieres eliminar permanentemente a tu mascota?</p>
+              <h2>¿Eliminar a {buddy.name}?</h2>
+              <p>Esta acción no se puede deshacer. ¿Estás seguro de que quieres eliminar permanentemente a tu buddy?</p>
 
               <div style={styles.modalButtons}>
                 <button
@@ -372,7 +357,7 @@ useEffect(() => {
                   Cancelar
                 </button>
                 <button
-                  onClick={handleDeletePet}
+                  onClick={handleDeleteBuddy}
                   style={styles.confirmDeleteButton}
                 >
                   Sí, eliminar
@@ -396,7 +381,6 @@ const styles = {
     padding: '2rem',
     zIndex: 0
   },
-  // Botón de eliminar en esquina superior derecha
   deleteButtonTop: {
     position: 'absolute',
     top: '20px',
@@ -466,7 +450,7 @@ const styles = {
     justifyContent: 'center',
     gap: '10px'
   },
-  petName: {
+  buddyName: {
     margin: 0,
     fontSize: '2.2rem',
     color: '#4b0082',
@@ -629,7 +613,6 @@ const styles = {
     margin: '0.5rem 0',
     textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
   },
-  // Sección de historial de sesiones
   historySection: {
     backgroundColor: 'rgba(245, 245, 245, 0.9)',
     borderRadius: '15px',
@@ -716,7 +699,6 @@ const styles = {
     userSelect: 'none',
     animationFillMode: 'forwards'
   },
-  // Estilos para el modal de confirmación
   confirmationModal: {
     position: 'fixed',
     top: 0,
@@ -773,7 +755,6 @@ const styles = {
   }
 };
 
-// Insertar la animación CSS en el documento
 const styleElement = document.createElement('style');
 styleElement.textContent = `
   @keyframes floatUp {
@@ -791,4 +772,4 @@ styleElement.textContent = `
 `;
 document.head.appendChild(styleElement);
 
-export default PetDetailPage;
+export default BuddyDetailPage;
