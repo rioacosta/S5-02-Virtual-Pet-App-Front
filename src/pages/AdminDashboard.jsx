@@ -2,20 +2,20 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom"; // Añadimos Link
 import { isTokenExpired } from "../utils/authUtils";
 import {
-  fetchUsersWithPets,
+  fetchUsersWithBuddys,
   toggleUserEnabled,
   deleteUser
 } from "../services/adminService";
 
-function getAvatarByLevel(pet) {
-  if (!pet) return "/assets/avatars/the-gang.png";
+function getAvatarByLevel(buddy) {
+  if (!buddy) return "/assets/avatars/the-gang.png";
 
-  if (Array.isArray(pet.avatarStages) && pet.avatarStages.length > 0) {
-    const index = Math.min((pet.level || 1) - 1, pet.avatarStages.length - 1);
-    const fileName = pet.avatarStages[index]?.split('/').pop();
+  if (Array.isArray(buddy.avatarStages) && buddy.avatarStages.length > 0) {
+    const index = Math.min((buddy.level || 1) - 1, buddy.avatarStages.length - 1);
+    const fileName = buddy.avatarStages[index]?.split('/').pop();
     return `/assets/avatars/${fileName}`;
   }
-  return `/assets/avatars/${pet.avatar || "the-gang.png"}`;
+  return `/assets/avatars/${buddy.avatar || "the-gang.png"}`;
 }
 
 export default function AdminDashboard() {
@@ -23,7 +23,7 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
 
   const loadUsers = () => {
-    fetchUsersWithPets().then(setUsers);
+    fetchUsersWithBuddys().then(setUsers);
   };
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
 
       <div style={{ position: "relative", zIndex: 1 }}>
         <h1>Panel de Administración 🧘‍♀️🔐</h1>
-        <p>Usuarios registrados y sus buddys</p>
+        <p>Usuarias registrados y sus buddys</p>
 
         <button onClick={handleLogout} style={cardStyles.logoutButton}>
           🔒 Cerrar sesión
@@ -121,7 +121,7 @@ export default function AdminDashboard() {
             <h2>{user.username} ({user.email})</h2>
             <p>Estado: {user.enabled ? "🟢 Activo" : "🔴 Suspendido"}</p>
             <p>Roles: {user.roles.join(", ")}</p>
-            <p>Mascotas: {user.pets.length}</p>
+            <p>Mascotas: {user.buddys.length}</p>
 
             <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
               <button onClick={() => handleToggle(user.username)} style={cardStyles.actionButton}>
@@ -132,29 +132,29 @@ export default function AdminDashboard() {
               </button>
             </div>
 
-            <div style={cardStyles.petsGroup}>
-              {user.pets.map(pet => (
+            <div style={cardStyles.buddysGroup}>
+              {user.buddys.map(buddy => (
 
                 // Envolvemos cada tarjeta de mascota en un <a> para que abra nueva pagina
                 <a
-                  href={`/pet/${pet.id}`}
+                  href={`/buddys/${buddy.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  key={pet.id}
+                  key={buddy.id}
                   style={{ textDecoration: 'none' }}
                 >
-                  <div style={cardStyles.petCard}>
+                  <div style={cardStyles.buddyCard}>
                     <img
-                      src={getAvatarByLevel(pet)}
-                      alt={pet.name}
-                      style={cardStyles.petImage}
+                      src={getAvatarByLevel(buddy)}
+                      alt={buddy.name}
+                      style={cardStyles.buddyImage}
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = "/assets/avatars/the-gang.png";
                       }}
                     />
-                    <h4>{pet.name}</h4>
-                    <p>Nivel {pet.level}</p>
+                    <h4>{buddy.name}</h4>
+                    <p>Nivel {buddy.level}</p>
                   </div>
                 </a>
               ))}
@@ -174,13 +174,13 @@ const cardStyles = {
     borderRadius: "12px",
     boxShadow: "0 0 10px rgba(0,0,0,0.1)"
   },
-  petsGroup: {
+  buddysGroup: {
     display: "flex",
     flexWrap: "wrap",
     gap: "1rem",
     marginTop: "1rem"
   },
-  petCard: {
+  buddyCard: {
     width: "120px",
     backgroundColor: "#f4f4f4",
     padding: "0.5rem",
@@ -188,7 +188,7 @@ const cardStyles = {
     textAlign: "center",
     boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
   },
-  petImage: {
+  buddyImage: {
     width: "100%",
     borderRadius: "50%",
     objectFit: "cover",
@@ -229,6 +229,6 @@ const cardStyles = {
     borderRadius: "8px",
     cursor: "pointer",
     fontWeight: "bold",
-    marginLeft: "0.5rem" // CORRECCIÓN AQUÍ: sin espacio entre número y unidad
+    marginLeft: "0.5rem"
   }
 };

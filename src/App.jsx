@@ -7,8 +7,8 @@ import { isTokenExpired } from './utils/authUtils';
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
-import CreatePetPage from './pages/CreatePetPage';
-import PetDetailPage from './pages/PetDetailPage';
+import CreateBuddyPage from './pages/CreateBuddyPage';
+import BuddyDetailPage from './pages/BuddyDetailPage';
 import MeditationSessionPage from './pages/MeditationSessionPage';
 
 function App() {
@@ -64,15 +64,15 @@ function App() {
           }
         />
         <Route
-          path="/create-pet"
-          element={isAuthenticated ? <CreatePetPage /> : <Navigate to="/" replace />}
+          path="/create"
+          element={isAuthenticated ? <CreateBuddyPage /> : <Navigate to="/" replace />}
         />
         <Route
-          path="/pet/:id"
-          element={isAuthenticated ? <PetDetailPage /> : <Navigate to="/" replace />}
+          path="/buddys/:id"
+          element={isAuthenticated ? <BuddyDetailPage /> : <Navigate to="/" replace />}
         />
         <Route
-          path="/meditate/:petId"
+          path="/meditate/:buddyId"
           element={isAuthenticated ? <MeditationSessionPage /> : <Navigate to="/" replace />}
         />
       </Routes>

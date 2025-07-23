@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
-function getAvatarByLevel(pet) {
-  if (!pet) return "/assets/avatarsNOGB/the-gang.png";
+function getAvatarByLevel(buddy) {
+  if (!buddy) return "/assets/avatarsNOGB/the-gang.png";
 
-  if (Array.isArray(pet.avatarStages) && pet.avatarStages.length > 0) {
-    const index = Math.min((pet.level || 1) - 1, pet.avatarStages.length - 1);
-    const fileName = pet.avatarStages[index]?.split('/').pop();
+  if (Array.isArray(buddy.avatarStages) && buddy.avatarStages.length > 0) {
+    const index = Math.min((buddy.level || 1) - 1, buddy.avatarStages.length - 1);
+    const fileName = buddy.avatarStages[index]?.split('/').pop();
     return `/assets/avatarsNOBG/${fileName}`;
   }
-  return `/assets/avatarsNOGB/${pet.avatar || "the-gang.png"}`;
+  return `/assets/avatarsNOGB/${buddy.avatar || "the-gang.png"}`;
 }
 
 function MeditationSessionPage() {
-  const { petId } = useParams();
-  const [pet, setPet] = useState(null);
+  const { buddyId } = useParams();
+  const [buddy, setBuddy] = useState(null);
   const [habitat, setHabitat] = useState('space');
   const [minutes, setMinutes] = useState(10);
   const [isMeditating, setIsMeditating] = useState(false);
@@ -24,9 +24,6 @@ function MeditationSessionPage() {
   const startSound = new Audio('/assets/sounds/ending-sound.mp3');
   const endSound = new Audio('/assets/sounds/ending-sound.mp3');
 
-  /*const backgroundSound = new Audio('/assets/sounds/background-meditation.mp3');
-  backgroundSound.loop = true;
-  backgroundSound.volume = 0.5;*/
 
   const habitatIcon = {
     base_chakra_icon: "/assets/chakras/Chakra_Base.png",
@@ -81,13 +78,13 @@ function MeditationSessionPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:8080/api/pets/${petId}`, {
+    fetch(`http://localhost:8080/api/buddys/${buddyId}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
-      .then(data => setPet(data))
+      .then(data => setBuddy(data))
       .catch(err => console.error("Error al cargar mascota:", err));
-  }, [petId]);
+  }, [buddyId]);
 
   const startMeditation = () => {
     try {
@@ -99,7 +96,7 @@ function MeditationSessionPage() {
       } catch (e) {
         console.warn('No se pudo reproducir el sonido:', e);
       }
-    
+
       setIsMeditating(true);
       setTimeLeft(minutes * 60);
     };
@@ -147,7 +144,7 @@ function MeditationSessionPage() {
     const token = localStorage.getItem('token');
 
     try {
-      await fetch(`http://localhost:8080/api/pets/${petId}/meditate`, {
+      await fetch(`http://localhost:8080/api/buddys/${buddyId}/meditate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -159,7 +156,7 @@ function MeditationSessionPage() {
     // ⏱ Esperar 3 segundos para mostrar los corazones antes de navegar
     setTimeout(() => {
       setIsMeditating(false);
-      navigate(`/pet/${petId}`);
+      navigate(`/buddys/${buddyId}`);
     }, 11000);
 
     } catch (err) {
@@ -204,7 +201,7 @@ function MeditationSessionPage() {
           <>
             {/* Vista previa del hábitat */}
             <div style={styles.previewContainer}>
-              <h2>Sesión de Meditación con {pet?.name}</h2>
+              <h2>Sesión de Meditación con {buddy?.name}</h2>
               <div style={styles.habitatPreview}>
                 <div
                   style={{
@@ -217,8 +214,8 @@ function MeditationSessionPage() {
                     <p style={styles.habitatDescription}>{habitatDescriptions[habitat]}</p>
                   </div>
                   <img
-                    src={getAvatarByLevel(pet)}
-                    alt={pet?.name}
+                    src={getAvatarByLevel(buddy)}
+                    alt={buddy?.name}
                     style={styles.previewAvatar}
                     onError={(e) => {
                       e.target.onerror = null;
@@ -339,8 +336,8 @@ function MeditationSessionPage() {
 
             <div style={styles.avatarAndButton}>
               <img
-                src={getAvatarByLevel(pet)}
-                alt={pet?.name}
+                src={getAvatarByLevel(buddy)}
+                alt={buddy?.name}
                 style={styles.avatarMeditating}
               />
               <button
@@ -543,7 +540,7 @@ const styles = {
     margin: '0 auto',
     maxWidth: '900px',
     boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
-    backgroundSize: 'contain',
+    //backgroundSize: 'contain',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     backgroundSize: '100% 100%'  // Estira la imagen para llenar el contenedor

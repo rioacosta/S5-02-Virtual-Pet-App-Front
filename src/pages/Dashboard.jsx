@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { isTokenExpired } from "../utils/authUtils";
 
 export default function Dashboard() {
-  const [pets, setPets] = useState([]);
+  const [buddy, setBuddy] = useState([]);
   const [totalMinutes, setTotalMinutes] = useState(0);
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
@@ -42,23 +42,24 @@ export default function Dashboard() {
     const decoded = jwtDecode(token);
     setUserData({ name: decoded.userId });
 
-    fetch("http://localhost:8080/api/v1/users/me", {
+    fetch("http://localhost:8080/api/users/me", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
       .then(data => setUserData(data))
       .catch(err => console.error("Error al cargar usuario:", err));
 
-    fetch("http://localhost:8080/api/pets", {
+    fetch("http://localhost:8080/api/users/buddys", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
       .then(data => {
-        setPets(data);
-        const total = data.reduce((sum, pet) => sum + (pet.totalMeditationMinutes || 0), 0);
+        setBuddy(data);
+        const total = data.reduce((sum, buddy) => sum + (buddy.totalMeditationMinutes || 0), 0);
         setTotalMinutes(total);
       })
       .catch(err => console.error("Error al cargar buddy:", err));
+
   }, [navigate]);
 
   const handleLogout = () => {
@@ -71,7 +72,7 @@ export default function Dashboard() {
   const handleUserUpdate = async () => {
     const token = localStorage.getItem('token');
     try {
-      await fetch("http://localhost:8080/api/v1/users/update", {
+      await fetch("http://localhost:8080/api/users/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +94,7 @@ export default function Dashboard() {
   const handlePasswordChange = async () => {
     const token = localStorage.getItem('token');
     try {
-      await fetch(`http://localhost:8080/api/v1/users/change-password?oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`, {
+      await fetch(`http://localhost:8080/api/users/change-password?oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -103,6 +104,24 @@ export default function Dashboard() {
       alert("❌ Error al cambiar contraseña");
     }
   };
+
+  function getAvatarByLevel(buddy) {
+    if (Array.isArray(buddy.avatarStages) && buddy.avatarStages.length > 0) {
+      const index = Math.min((buddy.level || 1) - 1, buddy.avatarStages.length - 1);
+      const stage = buddy.avatarStages[index];
+      if (stage) {
+        console.log(`🐾 Mostrando stage: ${stage}`);
+        return stage;
+      }
+    }
+
+    if (buddy.avatar) {
+      console.log(`🐾 Mostrando avatar base: $buddy.avatar}`);
+      return `/assets/avatars/${buddy.avatar}`;
+    }
+
+    return "/assets/avatars/the-gang.png";
+  }
 
   return (
     <div
@@ -170,26 +189,26 @@ export default function Dashboard() {
           <p>minutos</p>
         </div>
 
-        <Link to="/create-pet">
+        <Link to="/create">
           <button style={styles.createButton}>➕ Crear buddy</button>
         </Link>
 
         <h3 style={{ marginTop: "2rem" }}>Tus Compañeros de Meditación</h3>
-        <div style={styles.petsContainer}>
-          {pets.map((pet) => (
-            <Link to={`/pet/${pet.id}`} key={pet.id} style={{ textDecoration: "none" }}>
-              <div style={styles.petCard}>
+        <div style={styles.buddysContainer}>
+          {buddy.map((buddy) => (
+            <Link to={`/buddys/${buddy.id}`} key={buddy.id} style={{ textDecoration: "none" }}>
+              <div style={styles.buddysCard}>
                 <img
-                  src={getAvatarByLevel(pet)}
-                  alt={pet.name}
-                  style={styles.petImage}
+                  src={getAvatarByLevel(buddy)}
+                  alt={buddy.name}
+                  style={styles.buddysImage}
                   onError={(e) => {
-                    e.currentTarget.onerror = null; // Evita bucle infinito si también falla esta
+                    e.currentTarget.onerror = null;
                     e.currentTarget.src = "/assets/avatars/the-gang.png";
                   }}
                 />
-                <h3>{pet.name}</h3>
-                <p>Nivel {pet.level || 1}</p>
+                <h3>{buddy.name}</h3>
+                <p>Nivel {buddy.level || 1}</p>
               </div>
             </Link>
           ))}
@@ -197,23 +216,6 @@ export default function Dashboard() {
       </div>
     </div>
   );
-}
-function getAvatarByLevel(pet) {
-  if (Array.isArray(pet.avatarStages) && pet.avatarStages.length > 0) {
-    const index = Math.min((pet.level || 1) - 1, pet.avatarStages.length - 1);
-    const stage = pet.avatarStages[index];
-    if (stage) {
-      console.log(`🐾 Mostrando stage: ${stage}`);
-      return stage;
-    }
-  }
-
-  if (pet.avatar) {
-    console.log(`🐾 Mostrando avatar base: ${pet.avatar}`);
-    return `/assets/avatars/${pet.avatar}`;
-  }
-
-  return "/assets/avatars/the-gang.png";
 }
 
 
@@ -258,13 +260,13 @@ const styles = {
     //display: "block",
     margin: "0 auto",
   },
-  petsContainer: {
+  buddysContainer: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
     gap: "1.5rem",
     marginTop: "1.5rem",
   },
-  petCard: {
+  buddysCard: {
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     backdropFilter: "blur(5px)",
     borderRadius: "12px",
@@ -275,7 +277,7 @@ const styles = {
     color: "#333",
     boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
   },
-  petImage: {
+  buddysImage: {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
