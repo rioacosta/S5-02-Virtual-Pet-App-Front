@@ -107,10 +107,10 @@ useEffect(() => {
          alt="Logo de la app"
          style={{
            position: "absolute",
-           top: "-190px",           // Distancia desde arriba (puedes ajustar)
+           top: "-270px",           // Distancia desde arriba (puedes ajustar)
            left: "50%",
            transform: "translateX(-50%)",
-           width: "420px",        // Ajustá tamaño
+           width: "520px",        // Ajustá tamaño
            zIndex: 2,
            pointerEvents: "none"  // Permite clickear lo que está debajo
          }}
