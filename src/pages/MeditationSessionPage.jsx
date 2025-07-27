@@ -385,7 +385,10 @@ const styles = {
     color: '#5a32a8',
     marginBottom: '2rem',
     fontSize: '1.5rem',
-    textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+    textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
+    position: 'relative',
+    top: '-2rem',
+
   },
   habitatPreview: {
     margin: '1rem 0',

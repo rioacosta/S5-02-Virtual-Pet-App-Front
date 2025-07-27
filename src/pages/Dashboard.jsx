@@ -39,8 +39,8 @@ export default function Dashboard() {
       return;
     }
 
-    const decoded = jwtDecode(token);
-    setUserData({ name: decoded.userId });
+    //const decoded = jwtDecode(token);
+    //setUserData({ name: decoded.userId });
 
     fetch("http://localhost:8080/api/users/me", {
       headers: { Authorization: `Bearer ${token}` }
@@ -69,28 +69,64 @@ export default function Dashboard() {
     localStorage.removeItem("roles");
     window.location.href = "/";
   };
-  const handleUserUpdate = async () => {
-    const token = localStorage.getItem('token');
-    try {
-      await fetch("http://localhost:8080/api/users/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          ...userData,
-          username: newUsername,
-          email: newEmail
-        })
-      });
-      alert("✅ Datos actualizados");
-      window.location.reload(); // 👈 fuerza actualización de la vista
-    } catch (err) {
-      console.error("Error actualizando datos:", err);
-      alert("❌ Error al actualizar");
+const handleUserUpdate = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert("❌ No se encontró el token de sesión");
+    return;
+  }
+
+  // Crear payload solo con los cambios válidos
+  const payload = {};
+  if (newUsername.trim() && newUsername !== userData?.username) {
+    payload.username = newUsername.trim();
+  }
+  if (newEmail.trim() && newEmail !== userData?.email) {
+    payload.email = newEmail.trim();
+  }
+
+  // Si no hay cambios, no enviar nada
+  if (Object.keys(payload).length === 0) {
+    alert("⚠️ No se detectaron cambios para actualizar");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:8080/api/users/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error("No se pudo actualizar el usuario");
     }
-  };
+
+    const result = await response.json();
+
+    const newToken = result?.token;
+    if (newToken) {
+      console.log("🆕 Nuevo token recibido:", newToken);
+      localStorage.setItem("token", newToken);
+
+      const decoded = jwtDecode(newToken);
+      localStorage.setItem("roles", JSON.stringify(decoded.roles || []));
+      localStorage.setItem("userId", decoded.userId || decoded.id || decoded.sub);
+
+      alert("✅ Datos actualizados");
+      window.location.reload();
+    } else {
+      alert("⚠️ No se recibió un nuevo token");
+    }
+
+  } catch (err) {
+    console.error("Error actualizando datos:", err);
+    alert("❌ Error al actualizar");
+  }
+};
 
   const handlePasswordChange = async () => {
     const token = localStorage.getItem('token');
