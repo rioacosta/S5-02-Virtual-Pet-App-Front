@@ -183,13 +183,14 @@ const handleUserUpdate = async () => {
     <div
       style={{
         backgroundImage: `url(/assets/the-temple.png)`,
-        backgroundSize: "flex",
+        backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "100vh",
         padding: "2rem",
-        position: "relative"
+        position: "relative",
       }}
     >
+      {/* Capa translúcida */}
       <div
         style={{
           position: "absolute",
@@ -198,23 +199,38 @@ const handleUserUpdate = async () => {
           right: 0,
           bottom: 0,
           backgroundColor: "rgba(255, 255, 255, 0.70)",
-          zIndex: 0
+          zIndex: 0,
+          pointerEvents: "none",
         }}
       />
 
+      {/* Contenido principal */}
       <div style={{ position: "relative", zIndex: 1 }}>
-        <h1>{userData?.username || ""} este es tu espacio de paz 🧘</h1>
-        <p style={{
-          marginTop: '0.5rem',
-          fontSize: '1.2rem',
-          color: '#555',
-          backgroundColor: 'rgba(255, 255, 255, 0.4)',
-          padding: '1rem',
-          borderRadius: '10px',
-          maxWidth: '600px'
+        {/* Título alineado a la izquierda */}
+        <div style={{ position: "top", top: "2rem", left: "2rem", margiTop: "0.5rem",zIndex: 2 }}>
+          <h1>{userData?.username || ""} este es tu espacio de paz 🧘</h1>
+        </div>
+
+        {/* Párrafo de bienvenida centrado */}
+        <div style={{
+          textAlign: "center",
+          marginTop: "6rem",
+          marginBottom: "2rem",
+          maxWidth: "600px",
+          margin: "0 auto",
         }}>
-          🌟 Bienvenido a tu refugio virtual de calma y conexión. Esta app está diseñada para ayudarte a cultivar la atención plena, establecer rutinas de autocuidado y compartir momentos zen con tus buddies.
-        </p>
+          <p style={{
+            marginTop: '0.5rem',
+            fontSize: '1.2rem',
+            color: '#483D8B',
+            backgroundColor: 'rgba(255, 255, 255, 0.4)',
+            padding: '1rem',
+            borderRadius: '10px',
+          }}>
+            🌟 Bienvenido a tu refugio virtual de calma y conexión. Esta app está diseñada para ayudarte a cultivar la atención plena, establecer rutinas de autocuidado y compartir momentos zen con tus buddies.
+          </p>
+        </div>
+
         {isOwnProfile && (
           <>
             <button onClick={handleLogout} style={styles.logoutButton}>🔒 Cerrar sesión</button>
@@ -228,7 +244,13 @@ const handleUserUpdate = async () => {
         )}
 
         {showEditPanel && (
-          <div style={{ marginTop: '1rem', background: '#fff', padding: '1rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+          <div style={{
+            marginTop: '1rem',
+            background: '#fff',
+            padding: '1rem',
+            borderRadius: '12px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          }}>
             <h3>Actualizar Datos</h3>
             <input type="text" placeholder="Nuevo nombre" value={newUsername} onChange={e => setNewUsername(e.target.value)} />
             <input type="email" placeholder="Nuevo correo" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
@@ -251,7 +273,7 @@ const handleUserUpdate = async () => {
           <button style={styles.createButton}>➕ Crear buddy</button>
         </Link>
 
-        <h3 style={{ marginTop: "2rem" }}>Tus Compañeros de Meditación</h3>
+        <h3 style={{ marginTop: "1rem" }}>Tus Compañeros de Meditación</h3>
         <div style={styles.buddysContainer}>
           {buddy.map((buddy) => (
             <Link to={`/buddys/${buddy.id}`} key={buddy.id} style={{ textDecoration: "none" }}>
@@ -280,13 +302,19 @@ const handleUserUpdate = async () => {
 const styles = {
   meditationCounter: {
     textAlign: "center",
-    margin: "2rem 0",
-    padding: "1.5rem",
-    backgroundColor: "rgba(255, 245, 238, 0.40)",
-    borderRadius: "12px",
-    backdropFilter: "blur(5px)",
-    boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+    margin: "2rem auto",
+    padding: "1.2rem 2rem",                // Espaciado interno más aireado
+    backgroundColor: "rgba(255, 245, 238, 0.6)", // Un poco más visible
+    borderRadius: "20px",                 // Curva más suave
+    backdropFilter: "blur(6px)",          // Ligero aumento del desenfoque
+    boxShadow: "0 6px 20px rgba(0,0,0,0.15)", // Sombra más profunda
+    width: "90%",
+    maxWidth: "600px",                    // Controla que no sea gigante en pantallas grandes
+    color: "#4B0082",                     // Texto con más contraste y paz
+    //fontFamily: "'Segoe UI', sans-serif",// Fuente suave
+    transition: "all 0.3s ease-in-out",   // Animación suave si luego lo haces dinámico
   },
+
   counter: {
     fontSize: "4rem",
     fontWeight: "bold",
@@ -307,6 +335,9 @@ const styles = {
     fontWeight: "bold",
   },
   createButton: {
+    position: "absolute",
+    top: "45%",
+    left: "5%",
     padding: "12px 20px",
     backgroundColor: "#5bc0de",
     color: "white",
@@ -316,13 +347,13 @@ const styles = {
     fontSize: "1rem",
     fontWeight: "bold",
     //display: "block",
-    margin: "0 auto",
+    margin: "0.5rem",
   },
   buddysContainer: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
     gap: "1.5rem",
-    marginTop: "1.5rem",
+    marginTop: "0,5rem",
   },
   buddysCard: {
     backgroundColor: "rgba(255, 245, 238, 0.40)",
@@ -332,7 +363,7 @@ const styles = {
     textAlign: "center",
     cursor: "pointer",
     transition: "transform 0.3s ease",
-    color: "#333",
+    color: "#483D8B",
     boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
   },
   buddysImage: {

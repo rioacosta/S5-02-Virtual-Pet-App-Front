@@ -69,10 +69,10 @@ useEffect(() => {
           console.log("Roles:", roles); // 👈 Verificación antes de navegar
 
           if (Array.isArray(roles) && roles.includes("ROLE_ADMIN")) {
-            toast.info("Redirigiendo al panel de administrador 🛠️");
+            //toast.info("Redirigiendo al panel de administrador 🛠️");
             window.location.href = "/admin";  // Cambio a navegación forzada para refrescar estado
           } else {
-            toast.info("Redirigiendo al panel de usuario 🧘");
+            //toast.info("Redirigiendo al panel de usuario 🧘");
             navigate("/dashboard");
           }
         }, 1000);
@@ -103,7 +103,7 @@ useEffect(() => {
     >
 
       <img
-         src="/assets/title3.png" // Cambialo al nombre real de tu logo
+         src="/assets/title31.png" // Cambialo al nombre real de tu logo
          alt="Logo de la app"
          style={{
            position: "absolute",
@@ -128,7 +128,9 @@ useEffect(() => {
 
         }}
       >
-        <h2>{isLogin ? "Iniciar sesión" : "Registrarse"}</h2>
+        <h2 style={{ color: "#4169E1" }}>
+          {isLogin ? "Iniciar sesión" : "Registrarse"}
+        </h2>
 
         {logoutMessage && (
           <div
@@ -188,7 +190,7 @@ useEffect(() => {
             style={{
               background: "none",
               border: "none",
-              color: "blue",
+              color: "#1E90FF",
               cursor: "pointer"
             }}
           >
