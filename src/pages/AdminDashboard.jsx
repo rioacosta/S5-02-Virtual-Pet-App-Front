@@ -153,7 +153,7 @@ export default function AdminDashboard() {
       <div style={{
         position: "absolute",
         top: 0, left: 0, right: 0, bottom: 0,
-        backgroundColor: "rgba(255,255,255,0.85)",
+        backgroundColor: "rgba(255,255,255,0.70)",
         zIndex: 0
       }} />
 
@@ -260,7 +260,7 @@ export default function AdminDashboard() {
 
 const cardStyles = {
   userCard: {
-    backgroundColor: "rgba(255,255,255,0.9)",
+    backgroundColor: "rgba(255, 245, 238, 0.40)",
     marginBottom: "2rem",
     padding: "1rem 2rem",
     borderRadius: "12px",
@@ -289,7 +289,7 @@ const cardStyles = {
   },
   actionButton: {
     padding: "8px 14px",
-    backgroundColor: "#007bff",
+    backgroundColor: "#5bc0de",
     color: "white",
     border: "none",
     borderRadius: "6px",

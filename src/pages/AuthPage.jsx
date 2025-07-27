@@ -97,18 +97,35 @@ useEffect(() => {
         display: "flex",
         justifyContent: "left",
         alignItems: "flex-start", // <-- Esto lo pega arriba
-        //paddingTop: "2rem"
-        padding: "2rem"
+        top: "-190px",           // Distancia desde arriba (puedes ajustar)
+        padding: "4rem",
         }}
     >
+
+      <img
+         src="/assets/title3.png" // Cambialo al nombre real de tu logo
+         alt="Logo de la app"
+         style={{
+           position: "absolute",
+           top: "-190px",           // Distancia desde arriba (puedes ajustar)
+           left: "50%",
+           transform: "translateX(-50%)",
+           width: "420px",        // Ajustá tamaño
+           zIndex: 2,
+           pointerEvents: "none"  // Permite clickear lo que está debajo
+         }}
+       />
+
       <div
         style={{
-          background: "rgba(255, 255, 255, 0.85)",
+          background:  "rgba(255, 245, 238, 0.50)",
           padding: "2rem",
           borderRadius: "12px",
           width: "100%",
-          maxWidth: 400,
-          textAlign: "center"
+          maxWidth: 300,
+          textAlign: "center",
+          marginTop: '150px'
+
         }}
       >
         <h2>{isLogin ? "Iniciar sesión" : "Registrarse"}</h2>

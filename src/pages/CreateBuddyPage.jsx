@@ -185,7 +185,7 @@ const styles = {
     background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "rgba(255, 245, 238, 0.65)",
     borderRadius: '16px',
     boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
     padding: '2.5rem',
@@ -242,7 +242,7 @@ const styles = {
     borderRadius: '12px',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "rgba(240, 255, 240, 0.50)",
     width: '170px',
     height: '170px',
     display: 'flex',

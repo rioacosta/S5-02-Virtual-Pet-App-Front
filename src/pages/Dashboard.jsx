@@ -197,7 +197,7 @@ const handleUserUpdate = async () => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: "rgba(255, 255, 255, 0.85)",
+          backgroundColor: "rgba(255, 255, 255, 0.70)",
           zIndex: 0
         }}
       />
@@ -208,7 +208,7 @@ const handleUserUpdate = async () => {
           marginTop: '0.5rem',
           fontSize: '1.2rem',
           color: '#555',
-          backgroundColor: 'rgba(255, 255, 255, 0.6)',
+          backgroundColor: 'rgba(255, 255, 255, 0.4)',
           padding: '1rem',
           borderRadius: '10px',
           maxWidth: '600px'
@@ -282,7 +282,7 @@ const styles = {
     textAlign: "center",
     margin: "2rem 0",
     padding: "1.5rem",
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    backgroundColor: "rgba(255, 245, 238, 0.40)",
     borderRadius: "12px",
     backdropFilter: "blur(5px)",
     boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
@@ -325,7 +325,7 @@ const styles = {
     marginTop: "1.5rem",
   },
   buddysCard: {
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    backgroundColor: "rgba(255, 245, 238, 0.40)",
     backdropFilter: "blur(5px)",
     borderRadius: "12px",
     padding: "1.2rem",
