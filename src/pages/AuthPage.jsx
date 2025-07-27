@@ -19,8 +19,7 @@ useEffect(() => {
   const lastUser = localStorage.getItem("userId");
 
   if (logoutFlag === "true") {
-    // Evita ejecución duplicada
-    localStorage.setItem("loggedOut", "pending"); // ⛔ Temporiza el estado
+    localStorage.setItem("loggedOut", "pending");
 
     setTimeout(() => {
       toast.info(`Hasta pronto, ${lastUser || "usuario"} 🌿 Sigue respirando 🧘`, {

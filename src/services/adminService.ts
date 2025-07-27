@@ -39,7 +39,7 @@ export async function toggleUserEnabled(username: string): Promise<void> {
 
 export async function deleteUser(username: string): Promise<void> {
   const token = localStorage.getItem("token");
-  await fetch(`${ADMIN_API}/users/${username}`, {
+  await fetch(`${ADMIN_API}/${username}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   });

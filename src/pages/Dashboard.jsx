@@ -85,6 +85,7 @@ export default function Dashboard() {
         })
       });
       alert("✅ Datos actualizados");
+      window.location.reload(); // 👈 fuerza actualización de la vista
     } catch (err) {
       console.error("Error actualizando datos:", err);
       alert("❌ Error al actualizar");

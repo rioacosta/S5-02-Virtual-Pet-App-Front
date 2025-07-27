@@ -7,16 +7,24 @@ import {
   deleteUser
 } from "../services/adminService";
 
-function getAvatarByLevel(buddy) {
-  if (!buddy) return "/assets/avatars/the-gang.png";
+  function getAvatarByLevel(buddy) {
+    if (Array.isArray(buddy.avatarStages) && buddy.avatarStages.length > 0) {
+      const index = Math.min((buddy.level || 1) - 1, buddy.avatarStages.length - 1);
+      const stage = buddy.avatarStages[index];
+      if (stage) {
+        console.log(`🐾 Mostrando stage: ${stage}`);
+        return stage;
+      }
+    }
 
-  if (Array.isArray(buddy.avatarStages) && buddy.avatarStages.length > 0) {
-    const index = Math.min((buddy.level || 1) - 1, buddy.avatarStages.length - 1);
-    const fileName = buddy.avatarStages[index]?.split('/').pop();
-    return `/assets/avatars/${fileName}`;
+    if (buddy.avatar) {
+      console.log(`🐾 Mostrando avatar base: $buddy.avatar}`);
+      return `/assets/avatars/${buddy.avatar}`;
+    }
+
+    return "/assets/avatars/the-gang.png";
   }
-  return `/assets/avatars/${buddy.avatar || "the-gang.png"}`;
-}
+
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
