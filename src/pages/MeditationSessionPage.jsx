@@ -503,13 +503,13 @@ const styles = {
     color: '#5a32a8'
   },
   habitatInspiration: {
-  marginTop: '-30rem',
-  fontSize: '1.2rem',
-  color: '#555',
-  backgroundColor: 'rgba(255, 255, 255, 0.6)',
-  padding: '1rem',
-  borderRadius: '10px',
-  maxWidth: '600px'
+      marginTop: '-25rem',
+      fontSize: '1.2rem',
+      color: '#555',
+      backgroundColor: 'rgba(255, 255, 255, 0.6)',
+      padding: '1rem',
+      borderRadius: '10px',
+      maxWidth: '600px'
   },
   startButton: {
     padding: '15px 40px',
@@ -531,7 +531,7 @@ const styles = {
   },
   meditationScreen: {
     borderRadius: '15px',
-    padding: '3rem 2rem',
+    padding: '1rem 2rem',
     minHeight: '85vh',
     width: '100%',
     display: 'flex',
@@ -563,20 +563,21 @@ const styles = {
     boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
   },
   avatarAndButton: {
+    marginTop: "0",
     position: "absolute",
-    bottom: "20px",
+    bottom: "10px", // ubica el conjunto cerca del borde inferior
     left: "50%",
     transform: "translateX(-50%)",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "1.5rem",
     zIndex: 2,
-    width: '100%'
+    width: '100%',
   },
   avatarMeditating: {
     width: "220px",
     height: "auto",
+    marginBottom: "0.1rem", // junta el avatar al botón
     filter: 'drop-shadow(0 8px 15px rgba(0,0,0,0.3))'
   },
   heart: {
@@ -596,7 +597,7 @@ const styles = {
     borderRadius: '50px',
     cursor: 'pointer',
     fontWeight: 'bold',
-    fontSize: '1.1rem',
+    fontSize: '0.80rem',
     boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
     transition: 'all 0.2s',
     '&:hover': {

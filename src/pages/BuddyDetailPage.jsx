@@ -14,6 +14,7 @@ function BuddyDetailPage() {
   const [meditationHistory, setMeditationHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const avatarContainerRef = useRef(null);
+  const maxTotalExperience = 10000;
 
 // Cargar datos del buddy
   useEffect(() => {
@@ -187,6 +188,40 @@ useEffect(() => {
           pointerEvents: "none"
         }}
       />
+
+      {/* Barra de Experiencia Total */}
+            <div style={{
+              position: "absolute",
+              top: "1rem",
+              left: "2rem",
+              zIndex: 2,
+              backgroundColor: "#FFD700",
+              padding: "0.6rem 1rem",
+              borderRadius: "12px",
+              boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
+              maxWidth: "220px"
+            }}>
+              <label style={{ fontSize: "0.75rem", fontWeight: "600", marginBottom: "4px", display: "block" }}>🌈 Experiencia Total</label>
+              <div style={{
+                width: '100%',
+                backgroundColor: '#e2e8f0',
+                borderRadius: '6px',
+                height: '6px',
+                overflow: 'hidden'
+              }}>
+                <div
+                  style={{
+                    width: `${Math.min((buddy.totalExperience / maxTotalExperience) * 100, 100)}%`,
+                    backgroundColor: '#8B5CF6',
+                    height: '6px',
+                    transition: 'width 0.4s ease-in-out'
+                  }}
+                />
+              </div>
+              <p style={{ fontSize: '0.85rem', color: '#FF6666', marginTop: '4px' }}>
+                {buddy.totalExperience} / {maxTotalExperience} XP
+              </p>
+            </div>
 
       <button
         onClick={() => setShowDeleteConfirmation(true)}
@@ -375,7 +410,7 @@ const styles = {
   container: {
     position: 'relative',
     backgroundImage: 'url("/assets/the-temple.png")',
-    backgroundSize: 'flex',
+    display: 'flex',
     backgroundPosition: 'center',
     minHeight: '100vh',
     padding: '2rem',

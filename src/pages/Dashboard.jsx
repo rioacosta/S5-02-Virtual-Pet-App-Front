@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { isTokenExpired } from "../utils/authUtils";
 
@@ -13,35 +13,52 @@ export default function Dashboard() {
   const [newEmail, setNewEmail] = useState(userData?.email || '');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const { username: paramUsername } = useParams();
+  const isOwnProfile = !paramUsername;
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+useEffect(() => {
+  const token = localStorage.getItem("token");
 
-    if (!token || token === "undefined") {
-      console.warn("Token no encontrado. Redirigiendo...");
+  if (!token || token === "undefined") {
+    console.warn("Token no encontrado. Redirigiendo...");
+    navigate("/", { replace: true });
+    return;
+  }
+
+  try {
+    const expired = isTokenExpired(token);
+    if (expired) {
+      console.warn("Token expirado. Redirigiendo...");
+      localStorage.removeItem("token");
       navigate("/", { replace: true });
       return;
     }
+  } catch (error) {
+    console.error("Error al verificar token:", error);
+    navigate("/", { replace: true });
+    return;
+  }
 
-    try {
-      const expired = isTokenExpired(token);
-      console.log("¿Token expirado?:", expired);
-
-      if (expired) {
-        console.warn("Token expirado. Redirigiendo...");
-        localStorage.removeItem("token");
-        navigate("/", { replace: true });
-        return;
+if (paramUsername) {
+  // 👑 Modo admin viendo el perfil de otro usuario
+  fetch(`http://localhost:8080/api/admin/users/${paramUsername}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+    .then(res => res.json())
+    .then(user => {
+      if (user) {
+        setUserData(user);
+        setBuddy(user.buddys || []);
+        const total = (user.buddys || []).reduce((sum, b) => sum + (b.totalMeditationMinutes || 0), 0);
+        setTotalMinutes(total);
+      } else {
+        console.warn("Usuario no encontrado");
+        navigate("/admin", { replace: true });
       }
-    } catch (error) {
-      console.error("Error al verificar token:", error);
-      navigate("/", { replace: true });
-      return;
-    }
-
-    //const decoded = jwtDecode(token);
-    //setUserData({ name: decoded.userId });
-
+    })
+    .catch(err => console.error("Error al cargar perfil de usuario:", err));
+  } else {
+    // 🧘 Usuario logueado viendo su propio perfil
     fetch("http://localhost:8080/api/users/me", {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -59,8 +76,10 @@ export default function Dashboard() {
         setTotalMinutes(total);
       })
       .catch(err => console.error("Error al cargar buddy:", err));
+  }
 
-  }, [navigate]);
+}, [navigate, paramUsername]);
+
 
   const handleLogout = () => {
     localStorage.setItem("loggedOut", "true");
@@ -196,15 +215,17 @@ const handleUserUpdate = async () => {
         }}>
           🌟 Bienvenido a tu refugio virtual de calma y conexión. Esta app está diseñada para ayudarte a cultivar la atención plena, establecer rutinas de autocuidado y compartir momentos zen con tus buddies.
         </p>
-        <button onClick={handleLogout} style={styles.logoutButton}>
-          🔒 Cerrar sesión
-        </button>
-        <button
-          onClick={() => setShowEditPanel(prev => !prev)}
-          style={{ ...styles.logoutButton, top: '65px', backgroundColor: '#4CAF50' }}
-        >
-          ⚙️ Editar Perfil
-        </button>
+        {isOwnProfile && (
+          <>
+            <button onClick={handleLogout} style={styles.logoutButton}>🔒 Cerrar sesión</button>
+            <button
+              onClick={() => setShowEditPanel(prev => !prev)}
+              style={{ ...styles.logoutButton, top: '65px', backgroundColor: '#4CAF50' }}
+            >
+              ⚙️ Editar Perfil
+            </button>
+          </>
+        )}
 
         {showEditPanel && (
           <div style={{ marginTop: '1rem', background: '#fff', padding: '1rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>

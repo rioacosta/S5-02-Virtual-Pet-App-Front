@@ -50,7 +50,7 @@ function App() {
           }
         />
         <Route
-          path="/dashboard"
+          path="/dashboard/:username?"
           element={isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />}
         />
         <Route

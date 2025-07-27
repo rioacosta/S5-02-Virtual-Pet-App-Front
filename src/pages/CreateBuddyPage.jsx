@@ -231,33 +231,38 @@ const styles = {
     color: '#888',
     fontSize: '0.85rem'
   },
-  buddyGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-    gap: '1.5rem',
-    marginTop: '0.5rem'
-  },
+   buddysGrid: {
+     display: 'grid',
+     gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
+     gap: '5rem',
+     justifyItems: 'center'
+   },
   buddyOption: {
     border: '2px solid #ddd',
     borderRadius: '12px',
-    padding: '1rem',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     backgroundColor: '#f9f9f9',
-    '&:hover': {
-      backgroundColor: '#f0f0f0'
-    }
-  },
-  buddyImageContainer: {
-    height: '120px',
+    width: '170px',
+    height: '170px',
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '0.8rem'
+    justifyContent: 'center'
   },
+ buddyImageContainer: {
+   width: '150px',
+   height: '150px',
+   display: 'flex',
+   alignItems: 'center',
+   justifyContent: 'center',
+   overflow: 'hidden',
+   borderRadius: '6px',
+   marginBottom: '0.5rem'
+ },
   buddyImage: {
-    maxHeight: '100%',
-    maxWidth: '100%',
+    maxHeight: '105%',
+    maxWidth: '105%',
     objectFit: 'contain'
   },
   buddyName: {

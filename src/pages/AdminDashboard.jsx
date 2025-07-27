@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // Añadimos Link
+import { useNavigate, Link } from "react-router-dom";
 import { isTokenExpired } from "../utils/authUtils";
 import {
   fetchUsersWithBuddys,
   toggleUserEnabled,
-  deleteUser
+  deleteUser,
+  createAdmin,
+  updateUserRoles,
+  updateUserData
 } from "../services/adminService";
 
   function getAvatarByLevel(buddy) {
@@ -18,7 +21,7 @@ import {
     }
 
     if (buddy.avatar) {
-      console.log(`🐾 Mostrando avatar base: $buddy.avatar}`);
+console.log(`🐾 Mostrando avatar base: ${buddy.avatar}`);
       return `/assets/avatars/${buddy.avatar}`;
     }
 
@@ -29,6 +32,11 @@ import {
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+  const [newAdmin, setNewAdmin] = useState({
+    username: "",
+    email: "",
+    password: ""
+  });
 
   const loadUsers = () => {
     fetchUsersWithBuddys().then(setUsers);
@@ -77,10 +85,47 @@ export default function AdminDashboard() {
 
   const handleDelete = async (username) => {
     if (confirm(`¿Eliminar al usuario ${username} y todas sus buddys?`)) {
-      await deleteUser(username);
-      loadUsers();
+      try {
+        await deleteUser(username);
+        loadUsers();
+      } catch (error) {
+        if (error.response?.status === 400) {
+          alert(error.response.data.message); // Ej. "No puedes eliminarte a ti mismo."
+        } else {
+          console.error("Error al eliminar usuario:", error);
+          alert("Error inesperado al eliminar usuario");
+        }
+      }
     }
   };
+
+  const handleUpdateRoles = async (username, newRoles) => {
+    try {
+      await updateUserRoles(username, newRoles);
+      loadUsers();
+    } catch (error) {
+      if (error.response?.status === 400) {
+        alert(error.response.data.message); // Ej. "No puedes quitarte el rol ADMIN."
+      } else {
+        console.error("Error al actualizar roles:", error);
+        alert("Error inesperado al actualizar roles");
+      }
+    }
+  };
+
+  const handleCreateAdmin = async () => {
+    try {
+      await createAdmin(newAdmin);
+      alert("Administrador creado exitosamente 🎉");
+      setNewAdmin({ username: "", email: "", password: "" });
+      loadUsers();
+    } catch (error) {
+      console.error("Error creando administrador:", error);
+      alert("No se pudo crear el administrador");
+    }
+  };
+
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -123,13 +168,52 @@ export default function AdminDashboard() {
         <button onClick={goToUserDashboard} style={cardStyles.userDashboardButton}>
           🧘 Ir al Dashboard de Usuario
         </button>
+        <div style={{
+          backgroundColor: "#e7f3ff",
+          padding: "1rem",
+          borderRadius: "10px",
+          marginBottom: "2rem"
+        }}>
+          <h3>Crear nuevo Administrador 👑</h3>
+          <input
+            placeholder="Nombre de usuario"
+            value={newAdmin.username}
+            onChange={e => setNewAdmin({ ...newAdmin, username: e.target.value })}
+            style={{ marginRight: "0.5rem" }}
+          />
+          <input
+            placeholder="Email"
+            value={newAdmin.email}
+            onChange={e => setNewAdmin({ ...newAdmin, email: e.target.value })}
+            style={{ marginRight: "0.5rem" }}
+          />
+          <input
+            placeholder="Contraseña"
+            type="password"
+            value={newAdmin.password}
+            onChange={e => setNewAdmin({ ...newAdmin, password: e.target.value })}
+            style={{ marginRight: "0.5rem" }}
+          />
+          <button onClick={handleCreateAdmin} style={cardStyles.actionButton}>
+            🚀 Crear Admin
+          </button>
+        </div>
 
         {users.map(user => (
           <div key={user.id} style={cardStyles.userCard}>
-            <h2>{user.username} ({user.email})</h2>
+            <h2>
+              <a
+                href={`/dashboard/${user.username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none", color: "#007bff", fontWeight: "bold" }}
+              >
+                {user.username}
+              </a> ({user.email})
+            </h2>
             <p>Estado: {user.enabled ? "🟢 Activo" : "🔴 Suspendido"}</p>
             <p>Roles: {user.roles.join(", ")}</p>
-            <p>Mascotas: {user.buddys.length}</p>
+            <p>Buddys: {user.buddys.length}</p>
 
             <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
               <button onClick={() => handleToggle(user.username)} style={cardStyles.actionButton}>
