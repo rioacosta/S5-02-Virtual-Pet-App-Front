@@ -22,8 +22,8 @@ useEffect(() => {
     localStorage.setItem("loggedOut", "pending");
 
     setTimeout(() => {
-      toast.info(`Hasta pronto, ${lastUser || "usuario"} 🌿 Sigue respirando 🧘`, {
-        position: "top-right",
+      toast.info(`Hasta pronto, ${lastUser} 🌿 Sigue respirando 🧘`, {
+        position: "top-center",
         autoClose: 5000,
         theme: "light"
       });
@@ -79,7 +79,7 @@ useEffect(() => {
 
       } else {
         await register(form);
-        toast.success("Registro alineado. Ahora puedes iniciar sesión.");
+        toast.success("Registro alineado, ${username}. Ahora puedes iniciar sesión.");
         setIsLogin(true);
       }
     } catch (err) {

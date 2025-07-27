@@ -53,7 +53,7 @@ export async function createAdmin(payload: {
   });
   if (!res.ok) {
     const errorData = await res.json();
-    throw new Error(errorData.message || "Error al crear administrador");
+    throw new Error(errorData.message || "Error al crear administradore");
   }
 }
 
@@ -70,7 +70,7 @@ export async function updateUserData(username: string, payload: {
     },
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error("Error al actualizar datos del usuario");
+  if (!res.ok) throw new Error("Error al actualizar datos de la usuaria");
 }
 
 export async function updateUserRoles(username: string, roles: string[]): Promise<string[]> {
@@ -89,7 +89,7 @@ export async function updateUserRoles(username: string, roles: string[]): Promis
 
 export async function deleteUser(username: string): Promise<void> {
   const token = localStorage.getItem("token");
-  await fetch(`${ADMIN_API}/${username}`, {
+  await fetch(`${ADMIN_API}/delete/${username}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   });

@@ -21,7 +21,7 @@ import {
     }
 
     if (buddy.avatar) {
-console.log(`🐾 Mostrando avatar base: ${buddy.avatar}`);
+        console.log(`🐾 Mostrando avatar base: ${buddy.avatar}`);
       return `/assets/avatars/${buddy.avatar}`;
     }
 
@@ -64,7 +64,7 @@ export default function AdminDashboard() {
       const isAdmin = roles.includes("ROLE_ADMIN");
 
       if (!isAdmin) {
-        console.warn("Acceso denegado: no es administrador");
+        console.warn("Acceso denegado: no es administradore");
         navigate("/dashboard", { replace: true });
         return;
       }
@@ -84,7 +84,7 @@ export default function AdminDashboard() {
   };
 
   const handleDelete = async (username) => {
-    if (confirm(`¿Eliminar al usuario ${username} y todas sus buddys?`)) {
+    if (confirm(`¿Eliminar a la usuaria ${username} y todas sus buddys?`)) {
       try {
         await deleteUser(username);
         loadUsers();
@@ -92,8 +92,8 @@ export default function AdminDashboard() {
         if (error.response?.status === 400) {
           alert(error.response.data.message); // Ej. "No puedes eliminarte a ti mismo."
         } else {
-          console.error("Error al eliminar usuario:", error);
-          alert("Error inesperado al eliminar usuario");
+          console.error("Error al eliminar usuaria:", error);
+          alert("Error inesperado al eliminar usuaria");
         }
       }
     }
@@ -116,12 +116,12 @@ export default function AdminDashboard() {
   const handleCreateAdmin = async () => {
     try {
       await createAdmin(newAdmin);
-      alert("Administrador creado exitosamente 🎉");
+      alert("Administradore creade exitosamente 🎉");
       setNewAdmin({ username: "", email: "", password: "" });
       loadUsers();
     } catch (error) {
-      console.error("Error creando administrador:", error);
-      alert("No se pudo crear el administrador");
+      console.error("Error creando administradore:", error);
+      alert("No se pudo crear el administradore");
     }
   };
 
@@ -159,24 +159,24 @@ export default function AdminDashboard() {
 
       <div style={{ position: "relative", zIndex: 1 }}>
         <h1>Panel de Administración 🧘‍♀️🔐</h1>
-        <p>Usuarias registrados y sus buddys</p>
+        <p>Usuarias registradas y sus buddys</p>
 
         <button onClick={handleLogout} style={cardStyles.logoutButton}>
           🔒 Cerrar sesión
         </button>
 
         <button onClick={goToUserDashboard} style={cardStyles.userDashboardButton}>
-          🧘 Ir al Dashboard de Usuario
+          🧘 Ir al Dashboard de Usuaria
         </button>
         <div style={{
-          backgroundColor: "#e7f3ff",
+          backgroundColor: "rgba(72, 209, 204, 0.35)",
           padding: "1rem",
           borderRadius: "10px",
           marginBottom: "2rem"
         }}>
-          <h3>Crear nuevo Administrador 👑</h3>
+          <h3>Crear nueve Administradore 👑</h3>
           <input
-            placeholder="Nombre de usuario"
+            placeholder="Nombre de usuaria"
             value={newAdmin.username}
             onChange={e => setNewAdmin({ ...newAdmin, username: e.target.value })}
             style={{ marginRight: "0.5rem" }}
@@ -227,7 +227,6 @@ export default function AdminDashboard() {
             <div style={cardStyles.buddysGroup}>
               {user.buddys.map(buddy => (
 
-                // Envolvemos cada tarjeta de mascota en un <a> para que abra nueva pagina
                 <a
                   href={`/buddys/${buddy.id}`}
                   target="_blank"

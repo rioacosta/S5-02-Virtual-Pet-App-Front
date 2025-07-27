@@ -96,7 +96,6 @@ function MeditationSessionPage() {
       } catch (e) {
         console.warn('No se pudo reproducir el sonido:', e);
       }
-
       setIsMeditating(true);
       setTimeLeft(minutes * 60);
     };
@@ -176,9 +175,11 @@ function MeditationSessionPage() {
         backgroundImage: `url(/assets/the-temple.png)`,
         backgroundSize: "fixed",
         backgroundPosition: "center",
-        minHeight: "100vh",
+        height: "100vh",
         padding: "2rem",
-        position: "relative"
+        position: "relative",
+        overflow: "hidden",
+        boxSizing: "border-box"
       }}
     >
       {/* Capa blanca semitransparente en el fondo */}
@@ -196,7 +197,8 @@ function MeditationSessionPage() {
       />
 
       {/* Contenido principal encima */}
-      <div style={{ position: "relative", zIndex: 1 }}>
+      <div style={{ position: "relative", zIndex: 1, height: "100%",
+          overflowY: "auto" }}>
         {!isMeditating ? (
           <>
             {/* Vista previa del hábitat */}
@@ -227,9 +229,10 @@ function MeditationSessionPage() {
             </div>
 
             <div style={styles.selectionCard}>
-              <h2>SELECCIONA UN DESTINO PARA TU SESIÓN</h2>
+              <h2>SELECCIONA UN DESTINO PARA TU SESIÓN DE MEDITACIÓN</h2>
               <div style={styles.habitatOptions}>
-                {['base_chakra', 'sacral_chakra', 'plexus_chakra', 'heart_chakra', 'throat_chakra', 'third_eye_chakra', 'crown_chakra', 'forest', 'beach', 'mountain', 'space'].map((hab) => (
+                {['base_chakra', 'sacral_chakra', 'plexus_chakra', 'heart_chakra', 'throat_chakra',
+                    'third_eye_chakra', 'crown_chakra', 'forest', 'beach', 'mountain', 'space'].map((hab) => (
                   <div
                     key={hab}
                     style={{
@@ -387,7 +390,7 @@ const styles = {
     fontSize: '1.5rem',
     textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
     position: 'relative',
-    top: '-2rem',
+    //top: '-2rem',
 
   },
   habitatPreview: {
