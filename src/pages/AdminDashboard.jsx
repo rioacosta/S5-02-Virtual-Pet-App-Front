@@ -169,7 +169,7 @@ export default function AdminDashboard() {
           🧘 Ir al Dashboard de Usuaria
         </button>
         <div style={{
-          backgroundColor: "rgba(72, 209, 204, 0.35)",
+          backgroundColor: "rgba(200, 255, 240, 0.35)",
           padding: "1rem",
           borderRadius: "10px",
           marginBottom: "2rem"
@@ -259,7 +259,7 @@ export default function AdminDashboard() {
 
 const cardStyles = {
   userCard: {
-    backgroundColor: "rgba(255, 245, 238, 0.40)",
+    backgroundColor: "rgba(240, 255, 240, 0.50)",
     marginBottom: "2rem",
     padding: "1rem 2rem",
     borderRadius: "12px",

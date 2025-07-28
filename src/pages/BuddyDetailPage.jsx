@@ -441,7 +441,7 @@ const styles = {
     marginBottom: '2rem',
     padding: '20px',
     borderRadius: '15px',
-    backgroundColor: "rgba(240, 255, 240, 0.35)",
+    backgroundColor: "rgba(240, 255, 240, 0.30)",
     boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
     maxWidth: '400px',
     marginLeft: 'auto',
