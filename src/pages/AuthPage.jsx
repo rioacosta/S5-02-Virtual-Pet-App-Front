@@ -22,8 +22,8 @@ useEffect(() => {
     localStorage.setItem("loggedOut", "pending");
 
     setTimeout(() => {
-      toast.info(`Hasta pronto, ${lastUser || "usuario"} 🌿 Sigue respirando 🧘`, {
-        position: "top-right",
+      toast.info(`Hasta pronto, ${lastUser} 🌿 Sigue respirando 🧘`, {
+        position: "top-center",
         autoClose: 5000,
         theme: "light"
       });
@@ -62,14 +62,13 @@ useEffect(() => {
         localStorage.setItem("roles", JSON.stringify(roles));
         console.log("Guardado en localStorage roles:", localStorage.getItem("roles"));
 
-
         toast.success("Login exitoso");
 
         setTimeout(() => {
           console.log("Roles:", roles); // 👈 Verificación antes de navegar
 
           if (Array.isArray(roles) && roles.includes("ROLE_ADMIN")) {
-            //toast.info("Redirigiendo al panel de administrador 🛠️");
+            toast.info("Redirigiendo al panel de administrador 🛠️");
             window.location.href = "/admin";  // Cambio a navegación forzada para refrescar estado
           } else {
             //toast.info("Redirigiendo al panel de usuario 🧘");
@@ -79,7 +78,7 @@ useEffect(() => {
 
       } else {
         await register(form);
-        toast.success("Registro alineado. Ahora puedes iniciar sesión.");
+        toast.success("Registro alineado, ${username}. Ahora puedes iniciar sesión.");
         setIsLogin(true);
       }
     } catch (err) {
@@ -107,7 +106,7 @@ useEffect(() => {
          alt="Logo de la app"
          style={{
            position: "absolute",
-           top: "-270px",           // Distancia desde arriba (puedes ajustar)
+           top: "-230px",           // Distancia desde arriba (puedes ajustar)
            left: "50%",
            transform: "translateX(-50%)",
            width: "520px",        // Ajustá tamaño

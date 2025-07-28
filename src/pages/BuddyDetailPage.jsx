@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -85,13 +87,24 @@ useEffect(() => {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` }
     })
-      .then(res => res.json())
+      .then(async res => {
+        if (res.status === 429) {
+          const body = await res.json();
+          toast.error("😅 Tu buddy necesita un descanso...\n" + body.message);
+          return;
+        }
+        if (!res.ok) throw new Error("Error al intentar abrazar al buddy");
+        return res.json();
+      })
       .then(updatedBuddy => {
-        setBuddy(updatedBuddy);
-        generateHearts();
+        if (updatedBuddy) {
+          setBuddy(updatedBuddy);
+          generateHearts();
+        }
       })
       .catch(err => console.error("Error al abrazar:", err));
   };
+
 
   // Manejar eliminación de buddy
   const handleDeleteBuddy = () => {
@@ -195,7 +208,7 @@ useEffect(() => {
               top: "1rem",
               left: "2rem",
               zIndex: 2,
-              backgroundColor: "#FFD700",
+              backgroundColor: "rgba(255, 215, 0, 0.40)",
               padding: "0.6rem 1rem",
               borderRadius: "12px",
               boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
@@ -345,7 +358,7 @@ useEffect(() => {
 
         {buddy.rewards?.length > 0 && (
           <div style={styles.rewardsSection}>
-            <h2>Premios Obtenidos</h2>
+            <h2>Recompensas Obtenidas</h2>
             <div style={styles.rewardsContainer}>
               {buddy.rewards.map((reward, index) => (
                 <div key={index} style={styles.rewardItem}>
@@ -382,7 +395,7 @@ useEffect(() => {
           <div style={styles.confirmationModal}>
             <div style={styles.modalContent}>
               <h2>¿Eliminar a {buddy.name}?</h2>
-              <p>Esta acción no se puede deshacer. ¿Estás seguro de que quieres eliminar permanentemente a tu buddy?</p>
+              <p>Esta acción no se puede deshacer. ¿Estás segura de que quieres eliminar permanentemente a tu buddy?</p>
 
               <div style={styles.modalButtons}>
                 <button
@@ -441,7 +454,7 @@ const styles = {
     marginBottom: '2rem',
     padding: '20px',
     borderRadius: '15px',
-    background: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: "rgba(240, 255, 240, 0.30)",
     boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
     maxWidth: '400px',
     marginLeft: 'auto',
@@ -617,7 +630,7 @@ const styles = {
     gap: '15px'
   },
   statCard: {
-    backgroundColor: 'rgba(240, 245, 255, 0.9)',
+    backgroundColor: "rgba(255, 245, 238, 0.40)",
     borderRadius: '15px',
     padding: '1.5rem',
     textAlign: 'center',
@@ -633,7 +646,7 @@ const styles = {
     textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
   },
   infoCard: {
-    backgroundColor: 'rgba(230, 247, 255, 0.9)',
+    backgroundColor: "rgba(255, 245, 238, 0.40)",
     borderRadius: '15px',
     padding: '1.5rem',
     textAlign: 'center',

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { jwtDecode } from "jwt-decode";
 import { isTokenExpired } from "../utils/authUtils";
 
@@ -52,11 +54,11 @@ if (paramUsername) {
         const total = (user.buddys || []).reduce((sum, b) => sum + (b.totalMeditationMinutes || 0), 0);
         setTotalMinutes(total);
       } else {
-        console.warn("Usuario no encontrado");
+        console.warn("Usuaria no encontrada");
         navigate("/admin", { replace: true });
       }
     })
-    .catch(err => console.error("Error al cargar perfil de usuario:", err));
+    .catch(err => console.error("Error al cargar perfil de la usuaria:", err));
   } else {
     // 🧘 Usuario logueado viendo su propio perfil
     fetch("http://localhost:8080/api/users/me", {
@@ -64,7 +66,7 @@ if (paramUsername) {
     })
       .then(res => res.json())
       .then(data => setUserData(data))
-      .catch(err => console.error("Error al cargar usuario:", err));
+      .catch(err => console.error("Error al cargar usuaria:", err));
 
     fetch("http://localhost:8080/api/users/buddys", {
       headers: { Authorization: `Bearer ${token}` }
@@ -106,7 +108,7 @@ const handleUserUpdate = async () => {
 
   // Si no hay cambios, no enviar nada
   if (Object.keys(payload).length === 0) {
-    alert("⚠️ No se detectaron cambios para actualizar");
+    toast.error("⚠️ No se detectaron cambios para actualizar");
     return;
   }
 
@@ -121,7 +123,7 @@ const handleUserUpdate = async () => {
     });
 
     if (!response.ok) {
-      throw new Error("No se pudo actualizar el usuario");
+      throw new Error("No se pudo actualizar la usuaria");
     }
 
     const result = await response.json();
@@ -147,19 +149,24 @@ const handleUserUpdate = async () => {
   }
 };
 
-  const handlePasswordChange = async () => {
-    const token = localStorage.getItem('token');
-    try {
-      await fetch(`http://localhost:8080/api/users/change-password?oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`, {
-        method: "PATCH",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      alert("🔐 Contraseña actualizada");
-    } catch (err) {
-      console.error("Error al cambiar contraseña:", err);
-      alert("❌ Error al cambiar contraseña");
-    }
-  };
+const handlePasswordChange = async () => {
+  if (!oldPassword || !newPassword) {
+    toast.error("⚠️ Debes ingresar ambas contraseñas");
+    return;
+  }
+
+  const token = localStorage.getItem('token');
+  try {
+    await fetch(`http://localhost:8080/api/users/change-password?oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    toast.success("🔐 Contraseña actualizada");
+  } catch (err) {
+    console.error("Error al cambiar contraseña:", err);
+    toast.error("❌ Error al cambiar contraseña");
+  }
+};
 
   function getAvatarByLevel(buddy) {
     if (Array.isArray(buddy.avatarStages) && buddy.avatarStages.length > 0) {
@@ -208,7 +215,7 @@ const handleUserUpdate = async () => {
       <div style={{ position: "relative", zIndex: 1 }}>
         {/* Título alineado a la izquierda */}
         <div style={{ position: "top", top: "2rem", left: "2rem", margiTop: "0.5rem",zIndex: 2 }}>
-          <h1>{userData?.username || ""} este es tu espacio de paz 🧘</h1>
+          <h1>{userData?.username || ""} este es tu espacio de paz y amor🧘</h1>
         </div>
 
         {/* Párrafo de bienvenida centrado */}
@@ -227,7 +234,8 @@ const handleUserUpdate = async () => {
             padding: '1rem',
             borderRadius: '10px',
           }}>
-            🌟 Bienvenido a tu refugio virtual de calma y conexión. Esta app está diseñada para ayudarte a cultivar la atención plena, establecer rutinas de autocuidado y compartir momentos zen con tus buddies.
+            🌟 Bienvenida a tu refugio virtual de calma y conexión. Esta app está diseñada para ayudarte a cultivar
+            la atención plena, establecer rutinas de autocuidado y compartir momentos zen con tus buddies.
           </p>
         </div>
 
@@ -273,7 +281,7 @@ const handleUserUpdate = async () => {
           <button style={styles.createButton}>➕ Crear buddy</button>
         </Link>
 
-        <h3 style={{ marginTop: "1rem" }}>Tus Compañeros de Meditación</h3>
+        <h3 style={{ marginTop: "1rem", marginLeft: "2.5rem", fontSize: "1.3rem", }}>Tus Compañeras de Meditación</h3>
         <div style={styles.buddysContainer}>
           {buddy.map((buddy) => (
             <Link to={`/buddys/${buddy.id}`} key={buddy.id} style={{ textDecoration: "none" }}>
@@ -337,7 +345,7 @@ const styles = {
   createButton: {
     position: "absolute",
     top: "45%",
-    left: "5%",
+    left: "6%",
     padding: "12px 20px",
     backgroundColor: "#5bc0de",
     color: "white",
@@ -346,7 +354,6 @@ const styles = {
     cursor: "pointer",
     fontSize: "1rem",
     fontWeight: "bold",
-    //display: "block",
     margin: "0.5rem",
   },
   buddysContainer: {
