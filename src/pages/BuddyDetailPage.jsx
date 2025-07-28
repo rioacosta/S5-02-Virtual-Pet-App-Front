@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -85,13 +87,24 @@ useEffect(() => {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` }
     })
-      .then(res => res.json())
+      .then(async res => {
+        if (res.status === 429) {
+          const body = await res.json();
+          toast.error("😅 Tu buddy necesita un descanso...\n" + body.message);
+          return;
+        }
+        if (!res.ok) throw new Error("Error al intentar abrazar al buddy");
+        return res.json();
+      })
       .then(updatedBuddy => {
-        setBuddy(updatedBuddy);
-        generateHearts();
+        if (updatedBuddy) {
+          setBuddy(updatedBuddy);
+          generateHearts();
+        }
       })
       .catch(err => console.error("Error al abrazar:", err));
   };
+
 
   // Manejar eliminación de buddy
   const handleDeleteBuddy = () => {

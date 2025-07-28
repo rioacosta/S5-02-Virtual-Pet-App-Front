@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { jwtDecode } from "jwt-decode";
 import { isTokenExpired } from "../utils/authUtils";
 
@@ -106,7 +108,7 @@ const handleUserUpdate = async () => {
 
   // Si no hay cambios, no enviar nada
   if (Object.keys(payload).length === 0) {
-    alert("⚠️ No se detectaron cambios para actualizar");
+    toast.error("⚠️ No se detectaron cambios para actualizar");
     return;
   }
 
@@ -147,19 +149,24 @@ const handleUserUpdate = async () => {
   }
 };
 
-  const handlePasswordChange = async () => {
-    const token = localStorage.getItem('token');
-    try {
-      await fetch(`http://localhost:8080/api/users/change-password?oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`, {
-        method: "PATCH",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      alert("🔐 Contraseña actualizada");
-    } catch (err) {
-      console.error("Error al cambiar contraseña:", err);
-      alert("❌ Error al cambiar contraseña");
-    }
-  };
+const handlePasswordChange = async () => {
+  if (!oldPassword || !newPassword) {
+    toast.error("⚠️ Debes ingresar ambas contraseñas");
+    return;
+  }
+
+  const token = localStorage.getItem('token');
+  try {
+    await fetch(`http://localhost:8080/api/users/change-password?oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    toast.success("🔐 Contraseña actualizada");
+  } catch (err) {
+    console.error("Error al cambiar contraseña:", err);
+    toast.error("❌ Error al cambiar contraseña");
+  }
+};
 
   function getAvatarByLevel(buddy) {
     if (Array.isArray(buddy.avatarStages) && buddy.avatarStages.length > 0) {
