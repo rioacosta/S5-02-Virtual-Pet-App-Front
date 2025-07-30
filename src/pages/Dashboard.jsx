@@ -17,6 +17,7 @@ export default function Dashboard() {
   const [newPassword, setNewPassword] = useState('');
   const { username: paramUsername } = useParams();
   const isOwnProfile = !paramUsername;
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
 useEffect(() => {
   const token = localStorage.getItem("token");
@@ -186,6 +187,39 @@ const handlePasswordChange = async () => {
     return "/assets/avatars/the-gang.png";
   }
 
+  const handleDeleteAccount = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.error('❌ No se encontró el token de sesión');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/users/delete/${userData.username}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        toast.success('✅ Cuenta eliminada con éxito');
+        localStorage.removeItem('token');
+        localStorage.removeItem('roles');
+        navigate('/', { replace: true });
+        window.location.reload();
+      } else {
+        const errorData = await response.json();
+        toast.error(`❌ Error: ${errorData.message || 'No se pudo eliminar la cuenta'}`);
+      }
+    } catch (error) {
+      console.error('Error al eliminar la cuenta:', error);
+      toast.error('❌ Error de conexión');
+    } finally {
+      setShowDeleteModal(false);
+    }
+  };
+
   return (
     <div
       style={{
@@ -254,22 +288,81 @@ const handlePasswordChange = async () => {
 
         {showEditPanel && (
           <div style={{
+            margin: "2rem auto",
+            padding: "1.2rem 2rem",                // Espaciado interno más aireado
+            borderRadius: "20px",                 // Curva más suave
+            backdropFilter: "blur(1px)",          // Ligero aumento del desenfoque
+            //boxShadow: "0 6px 20px rgba(0,0,0,0.15)", // Sombra más profunda
+            width: "90%",
+            maxWidth: "600px",                    // Controla que no sea gigante en pantallas grandes
+            //color: "#4B0082",                     // Texto con más contraste y paz
+            transition: "all 0.3s ease-in-out",   // Animación suave si luego lo haces dinámico
             marginTop: '1rem',
-            background: '#fff',
-            padding: '1rem',
-            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-            borderRadius: '12px',
+            backgroundColor: 'rgba(255, 255, 255, 0.3)',
+            //borderRadius: '12px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
           }}>
-            <h3>Actualizar Datos</h3>
+            <h3 style={{marginTop: '2rem', marginBottom: '0.5rem',
+                fontSize: '1.2rem'
+               }}>Actualizar Datos</h3>
             <input type="text" placeholder="Nuevo nombre" value={newUsername} onChange={e => setNewUsername(e.target.value)} />
             <input type="email" placeholder="Nuevo correo" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
-            <button onClick={handleUserUpdate}>Guardar cambios</button>
+            <button onClick={handleUserUpdate}
+                            style={{marginTop: '1rem',
+                                    marginBottom: '1.5rem',
+                                    fontSize: '1rem',
+                                    margin: "0.5rem",
+                                    padding: "0.5rem 1rem",
+                                    backgroundColor: "#5bc0de",
+                                    color: "white",
+                                    border: "none",
+                                    borderRadius: "10px",
+                                    cursor: "pointer",
+                            }}>Guardar cambios</button>
 
-            <h4 style={{ marginTop: '1rem' }}>Cambiar contraseña</h4>
+            <h4 style={{ marginTop: '2rem', marginBottom: '0.5rem', fontSize: '1.2rem'
+                }}>Cambiar contraseña</h4>
             <input type="password" placeholder="Contraseña actual" value={oldPassword} onChange={e => setOldPassword(e.target.value)} />
             <input type="password" placeholder="Nueva contraseña" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-            <button onClick={handlePasswordChange}>Cambiar contraseña</button>
+
+            <button onClick={handlePasswordChange}
+                style={{marginTop: '2rem',
+                        fontSize: '1rem',
+                        margin: "1rem 0.5rem",
+                        padding: "0.5rem 1rem",
+                        backgroundColor: "#5bc0de",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        //fontWeight: "bold",
+                }}>Cambiar contraseña</button>
+
+
+            <button onClick={() => setShowDeleteModal(true)}
+              style={{
+                //margin: "0rem",// auto",
+                fontSize: '1rem',
+                borderRadius: "20px",                 // Curva más suave
+                boxShadow: "0 6px 20px rgba(0,0,0,0.15)", // Sombra más profunda
+                width: "80%",
+                maxWidth: "250px",                    // Controla que no sea gigante en pantallas grandes
+                color: "#4B0082",                     // Texto con más contraste y paz
+                transition: "all 0.3s ease-in-out",   // Animación suave si luego lo haces dinámico
+                position: 'relative',
+                left: '60%',
+                backgroundColor: "#FF6666",
+                color: 'white',
+                marginTop: '1rem',
+                padding: '0.6rem 1rem',             // Espaciado interno más aireado
+                border: 'none',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                zIndex: 1
+              }}
+            >
+              🗑️ Eliminar Cuenta
+            </button>
           </div>
         )}
 
@@ -304,6 +397,66 @@ const handlePasswordChange = async () => {
           ))}
         </div>
       </div>
+
+      {showDeleteModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '8px',
+            maxWidth: '500px',
+            textAlign: 'center'
+          }}>
+            <h3>¿Estás segura de que quieres eliminar tu cuenta?</h3>
+            <p>Esta acción es irreversible y se perderán todos tus datos.</p>
+
+            <div style={{ marginTop: '1.5rem' }}>
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                style={{
+                  marginRight: '1rem',
+                  padding: '0.5rem 1.5rem',
+                  backgroundColor: '#6c757d',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancelar
+              </button>
+
+              <button
+                onClick={handleDeleteAccount}
+                style={{
+
+                  marginBottom: "1.5rem",
+                  padding: "10px 20px",
+                  padding: '0.5rem 1.5rem',
+                  backgroundColor: '#ff4444',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Eliminar Cuenta
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -312,12 +465,12 @@ const handlePasswordChange = async () => {
 const styles = {
   meditationCounter: {
     textAlign: "center",
-    margin: "2rem auto",
+    margin: "0.5rem auto",
     padding: "1.2rem 2rem",                // Espaciado interno más aireado
     backgroundColor: "rgba(255, 245, 238, 0.1)", // Un poco más visible
     borderRadius: "20px",                 // Curva más suave
-    backdropFilter: "blur(6px)",          // Ligero aumento del desenfoque
-    boxShadow: "0 6px 20px rgba(0,0,0,0.15)", // Sombra más profunda
+    backdropFilter: "blur(1px)",          // Ligero aumento del desenfoque
+    boxShadow: "0 6px 20px rgba(0,0,0,0.25)", // Sombra más profunda
     width: "90%",
     maxWidth: "600px",                    // Controla que no sea gigante en pantallas grandes
     color: "#4B0082",                     // Texto con más contraste y paz
@@ -345,8 +498,8 @@ const styles = {
     fontWeight: "bold",
   },
   createButton: {
-    position: "absolute",
-    top: "45%",
+    position: "relative",
+    //top: "70%",
     left: "6%",
     padding: "12px 20px",
     backgroundColor: "#5bc0de",
@@ -356,7 +509,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "1rem",
     fontWeight: "bold",
-    margin: "0.5rem",
+    margin: "0.2rem",
   },
   buddysContainer: {
     display: "grid",
