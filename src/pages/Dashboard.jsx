@@ -223,12 +223,13 @@ const handlePasswordChange = async () => {
           textAlign: "center",
           marginTop: "6rem",
           marginBottom: "2rem",
-          maxWidth: "600px",
+          maxWidth: "850px",
           margin: "0 auto",
         }}>
           <p style={{
             marginTop: '0.5rem',
             fontSize: '1.2rem',
+            maxWidth: '850px',
             color: '#483D8B',
             backgroundColor: 'rgba(255, 255, 255, 0.4)',
             padding: '1rem',
@@ -256,6 +257,7 @@ const handlePasswordChange = async () => {
             marginTop: '1rem',
             background: '#fff',
             padding: '1rem',
+            backgroundColor: 'rgba(255, 255, 255, 0.5)',
             borderRadius: '12px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
           }}>
@@ -312,7 +314,7 @@ const styles = {
     textAlign: "center",
     margin: "2rem auto",
     padding: "1.2rem 2rem",                // Espaciado interno más aireado
-    backgroundColor: "rgba(255, 245, 238, 0.6)", // Un poco más visible
+    backgroundColor: "rgba(255, 245, 238, 0.1)", // Un poco más visible
     borderRadius: "20px",                 // Curva más suave
     backdropFilter: "blur(6px)",          // Ligero aumento del desenfoque
     boxShadow: "0 6px 20px rgba(0,0,0,0.15)", // Sombra más profunda

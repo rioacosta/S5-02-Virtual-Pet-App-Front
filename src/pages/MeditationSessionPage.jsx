@@ -229,8 +229,11 @@ function MeditationSessionPage() {
             </div>
 
             <div style={styles.selectionCard}>
-              <h2>SELECCIONA UN DESTINO PARA TU SESIÓN DE MEDITACIÓN</h2>
-              <div style={styles.habitatOptions}>
+              <h2>SELECCIONA UN DESTINO PARA LA SESIÓN.<br />
+                    ¿Sabías que la Tierra también tiene puntos específicos superenergéticos parecidos a lo que conocemos como chakras?<br /><br />
+                    Aquí puedes elegir meditar en uno de esos puntos mágicos o simplemente en un destino natural de tu elección que te transporte a un lugar de paz.
+                </h2>
+                <div style={styles.habitatOptions}>
                 {['base_chakra', 'sacral_chakra', 'plexus_chakra', 'heart_chakra', 'throat_chakra',
                     'third_eye_chakra', 'crown_chakra', 'forest', 'beach', 'mountain', 'space'].map((hab) => (
                   <div
@@ -386,29 +389,29 @@ const styles = {
   previewContainer: {
     textAlign: 'center',
     color: '#5a32a8',
-    marginBottom: '2rem',
-    fontSize: '1.5rem',
+    marginBottom: '1rem',
+    fontSize: '1.4rem',
     textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
     position: 'relative',
-    //top: '-2rem',
-
+    top: '-2rem',
   },
   habitatPreview: {
-    margin: '1rem 0',
+    margin: '0.5rem 0',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column'
   },
   previewImage: {
-    width: '70%',
-    height: '300px',
+    width: '80%',
+    height: '350px',
     borderRadius: '12px',
     backgroundSize: 'cover',
-    backgroundPosition: 'center',
+    backgroundPosition: '50% 55%' ,// 'center',
     position: 'relative',
     overflow: 'hidden',
-    boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
+    marginBottom: '0rem',
+    boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
   },
   previewOverlay: {
     position: 'absolute',
@@ -417,7 +420,7 @@ const styles = {
     left: 0,
     right: 0,
     padding: '10px',
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: 'rgba(0,0,0,0.3)',
     color: 'white',
     textAlign: 'center',
     fontSize: '1.1rem'
@@ -440,7 +443,7 @@ const styles = {
     textAlign: 'center',
     backgroundColor: '#f8f9fa',
     borderRadius: '12px',
-    padding: '1.5rem',
+    padding: '0.01rem',
     margin: '2rem auto',
     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
     maxWidth: '800px'
@@ -509,7 +512,7 @@ const styles = {
       marginTop: '-25rem',
       fontSize: '1.2rem',
       color: '#555',
-      backgroundColor: 'rgba(255, 255, 255, 0.6)',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
       padding: '1rem',
       borderRadius: '10px',
       maxWidth: '600px'
@@ -547,6 +550,7 @@ const styles = {
     maxWidth: '900px',
     boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
     //backgroundSize: 'contain',
+    //backgroundColor: '#ff1d20',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     backgroundSize: '100% 100%'  // Estira la imagen para llenar el contenedor
@@ -558,7 +562,7 @@ const styles = {
     transform: "translateX(-50%)",
     fontSize: "4rem",
     fontWeight: "bold",
-    backgroundColor: "rgba(255,255,255,0.8)",
+    backgroundColor: "rgba(255,255,255,0.3)",
     padding: "0.5rem 1.5rem",
     borderRadius: "15px",
     zIndex: 2,
@@ -601,6 +605,7 @@ const styles = {
     cursor: 'pointer',
     fontWeight: 'bold',
     fontSize: '0.80rem',
+    //backgroundColor: '#ff1d20',
     boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
     transition: 'all 0.2s',
     '&:hover': {
@@ -611,7 +616,8 @@ const styles = {
     position: 'fixed',
     bottom: '20px',
     left: '20px',
-    backgroundColor: '#5bc0de',    color: 'white',
+    backgroundColor: '#5bc0de',
+    color: 'white',
     padding: '12px 25px',
     borderRadius: '30px',
     border: 'none',
