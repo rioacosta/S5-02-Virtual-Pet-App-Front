@@ -203,7 +203,9 @@ function MeditationSessionPage() {
           <>
             {/* Vista previa del hábitat */}
             <div style={styles.previewContainer}>
-              <h2>Sesión de Meditación con {buddy?.name}</h2>
+              <h2 style={{ margin: '0 0 0.3rem' }}>
+                Sesión de Meditación con {buddy?.name}
+              </h2>
               <div style={styles.habitatPreview}>
                 <div
                   style={{
@@ -229,13 +231,13 @@ function MeditationSessionPage() {
             </div>
 
             <div style={styles.selectionCard}>
-              <h2>SELECCIONA UN DESTINO PARA LA SESIÓN.<br />
-                    ¿Sabías que la Tierra también tiene puntos específicos superenergéticos parecidos a lo que conocemos como chakras?<br /><br />
+              <h2>¿Sabías que la Tierra también tiene puntos específicos superenergéticos parecidos a lo que conocemos como chakras?<br /><br />
+              SELECCIONA UN DESTINO PARA LA SESIÓN:<br />
                     Aquí puedes elegir meditar en uno de esos puntos mágicos o simplemente en un destino natural de tu elección que te transporte a un lugar de paz.
                 </h2>
                 <div style={styles.habitatOptions}>
                 {['base_chakra', 'sacral_chakra', 'plexus_chakra', 'heart_chakra', 'throat_chakra',
-                    'third_eye_chakra', 'crown_chakra', 'forest', 'beach', 'mountain', 'space'].map((hab) => (
+                    'third_eye_chakra', 'crown_chakra', 'space', 'beach', 'forest', 'mountain'].map((hab) => (
                   <div
                     key={hab}
                     style={{
@@ -389,13 +391,14 @@ const styles = {
   previewContainer: {
     textAlign: 'center',
     color: '#5a32a8',
-    marginBottom: '1rem',
+    marginTop: '0.2rem',
     fontSize: '1.4rem',
     textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
     position: 'relative',
-    top: '-2rem',
+    top: '0.5rem',
   },
   habitatPreview: {
+    //marginTop: "0rem",
     margin: '0.5rem 0',
     display: 'flex',
     justifyContent: 'center',
@@ -403,14 +406,15 @@ const styles = {
     flexDirection: 'column'
   },
   previewImage: {
-    width: '80%',
-    height: '350px',
+    width: '85%',
+    height: '390px',
     borderRadius: '12px',
-    backgroundSize: 'cover',
+    backgroundSize: 'fixed',
     backgroundPosition: '50% 55%' ,// 'center',
     position: 'relative',
     overflow: 'hidden',
-    marginBottom: '0rem',
+    marginBottom: '0.5rem',
+    marginTop: '0.5rem',
     boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
   },
   previewOverlay: {
@@ -443,15 +447,17 @@ const styles = {
     textAlign: 'center',
     backgroundColor: '#f8f9fa',
     borderRadius: '12px',
-    padding: '0.01rem',
-    margin: '2rem auto',
+    padding: '1rem',
+    margin: '1.5rem auto',
     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-    maxWidth: '800px'
+    maxWidth: '1000px',
+    marginTop: "0.5rem",
+
   },
   habitatOptions: {
     display: 'flex',
     justifyContent: 'center',
-    gap: '1.5rem',
+    gap: '2.5rem',
     marginTop: '1rem',
     flexWrap: 'wrap'
   },
