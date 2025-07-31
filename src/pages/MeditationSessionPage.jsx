@@ -357,8 +357,8 @@ function MeditationSessionPage() {
 
            {/*Aquí insertas el mensaje de transición */}
            {hearts.length > 0 && (
-             <p style={{ color: '#5a32a8', marginTop: '1rem', fontSize: '1.1rem' }}>
-               //✨ Bien hecho. Regresando...
+             <p style={{ color: '#F5F5F5', marginTop: '1rem', fontSize: '1.1rem' }}>
+               ✨ Bien hecho. Regresando... ✨
              </p>
            )}
 
