@@ -248,7 +248,7 @@ const handlePasswordChange = async () => {
       {/* Contenido principal */}
       <div style={{ position: "relative", zIndex: 1 }}>
         {/* Título alineado a la izquierda */}
-        <div style={{ position: "top", top: "2rem", left: "2rem", margiTop: "0.5rem",zIndex: 2 }}>
+        <div style={{ position: "top", top: "2rem", left: "2rem", margiTop: "0.2rem",zIndex: 2 }}>
           <h1>{userData?.username || ""} este es tu espacio de paz y amor🧘</h1>
         </div>
 
@@ -257,20 +257,20 @@ const handlePasswordChange = async () => {
           textAlign: "center",
           marginTop: "6rem",
           marginBottom: "2rem",
-          maxWidth: "850px",
+          maxWidth: "950px",
           margin: "0 auto",
         }}>
           <p style={{
             marginTop: '0.5rem',
             fontSize: '1.2rem',
-            maxWidth: '850px',
+            maxWidth: '1100px',
             color: '#483D8B',
             backgroundColor: 'rgba(255, 255, 255, 0.4)',
             padding: '1rem',
             borderRadius: '10px',
           }}>
-            🌟 Bienvenida a tu refugio virtual de calma y conexión. Esta app está diseñada para ayudarte a cultivar
-            la atención plena, establecer rutinas de autocuidado y compartir momentos zen con tus buddies.
+            🌟 Bienvenida a Meditation Buddys tu refugio virtual de calma y conexión, donde la calma interior se encuentra con la aventura virtual. Crea tu mascota espiritual única y acompáñala en viajes meditativos a los lugares más sagrados y energéticos del planeta.
+            Esta app está diseñada para ayudarte a cultivar la atención plena, establecer rutinas de autocuidado y compartir momentos zen con tus buddies.
           </p>
         </div>
 

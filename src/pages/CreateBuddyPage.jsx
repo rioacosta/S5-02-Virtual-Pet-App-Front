@@ -17,7 +17,8 @@ const CreateBuddyPage = () => {
     { id: 1, name: "", image: "public/assets/avatars/Luli.png" },
     { id: 2, name: "", image: "public/assets/avatars/Lilo.png" },
     { id: 3, name: "", image: "public/assets/avatars/Lele.png" },
-    { id: 4, name: "", image: "public/assets/avatars/Lolo.png" }
+    { id: 4, name: "", image: "public/assets/avatars/Lolo.png" },
+    { id: 5, name: "", image: "public/assets/avatars/Loli.png" }
   ];
 
   const handleSubmit = async (e) => {
@@ -234,8 +235,9 @@ const styles = {
    buddysGrid: {
      display: 'grid',
      gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
-     gap: '5rem',
-     justifyItems: 'center'
+     gap: '3rem',
+     justifyItems: 'center',
+     width: '100%'
    },
   buddyOption: {
     border: '2px solid #ddd',
@@ -243,7 +245,7 @@ const styles = {
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     backgroundColor: "rgba(240, 255, 240, 0.50)",
-    width: '170px',
+    width: '150px',
     height: '170px',
     display: 'flex',
     flexDirection: 'column',
