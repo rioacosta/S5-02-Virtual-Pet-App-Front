@@ -50,30 +50,30 @@ function MeditationSessionPage() {
   };
 
   const habitatDescriptions = {
-    base_chakra: "El Monte Shasta es la cola del dragón, el Monte Rainer es su boca o cabeza. Esta es la base del sistema energético del planeta.",
-    sacral_chakra: "Lago Titikaka este es el centro mundial de la creación de nuevas especies y los avances evolutivos significativos de las especies existentes.",
-    plexus_chakra: "Uluru desde donde emerge la voz de la Tierra, es único entre los centros sagrados planetarios.",
-    heart_chakra: "Chalice Well, ubicado en Glastonbury, Somerset, es conocido como uno de los lugares más místicos y espirituales de Inglaterra.",
-    throat_chakra: "Giza es considerado como el chakra de la garganta; lugar de donde emerge la voz de la Tierra. Este chakra es vital para la estructura de la Tierra.",
-    third_eye_chakra: "El Monte Agung, este volcán a menudo llamado el techo de Bali, ofrece impresionantes panoramas y una belleza natural sagrada. Como centro espiritual de los hindúes en la Isla de los Mil Templos.",
-    crown_chakra: "Kailash es la montaña más sagrada de los Himalayas y es el centro del Chakra Coronario Terrestre.",
+    base_chakra: "En California, la tribu Shasta lo considera un vórtice energético entre los mundos terrenales y espirituales.",
+    sacral_chakra: "Los indígenas en Perú le conocen como Isla del Sol y piensan que toda la humanidad proviene de él.",
+    plexus_chakra: "Conocido como ombligo del mundo o monte de los colores cambiantes, en Australia.",
+    heart_chakra: "Es conocido como uno de los lugares más místicos y espirituales de Inglaterra.",
+    throat_chakra: "Giza un lugar donde entre las arenas del tiempo emerge la voz de la Tierra en Egipto.",
+    third_eye_chakra: "Este volcán, a menudo llamado el techo de Bali, es un centro espiritual de los hindúes en la Isla de los Mil Templos.",
+    crown_chakra: "Kailash es la montaña más sagrada de los Himalayas, la tradición Bon Tibetana lo considera la morada de los dioses",
     forest: "Un bosque tranquilo con sonidos de pájaros y brisa suave",
     beach: "Playa relajante con olas suaves y brisa marina",
     mountain: "Montañas serenas con vistas panorámicas y aire puro",
-    space: "Vistas cósmicas de estrellas y planetas en la inmensidad del espacio"
+    space: "Vistas cósmicas de la inmensidad del espacio inundado de estrellas y planetas"
   };
   const habitatInspirations = {
-    base_chakra: "Piensa en mares rojos.",
-    sacral_chakra: "Algunas palabras.",
-    plexus_chakra: "Algunas palabras.",
-    heart_chakra: "Algunas palabras.",
-    throat_chakra: "Algunas palabras.",
-    third_eye_chakra: "Algunas palabras.",
-    crown_chakra: "Algunas palabras.",
-    forest: "🌲 Respira profundo. Siente cómo el bosque te abraza.",
-    beach: "🌊 Escucha las olas. Cada una limpia tus pensamientos.",
-    mountain: "⛰️ Observa la cima. Tu mente también puede llegar allí.",
-    space: "🚀 Flota libre. No hay gravedad para tus preocupaciones."
+    base_chakra: "Chakra Base Terrestre\nCuna de luz, donde el ser flota en la certeza de lo eterno.\nInhala la luz que emana del origen; aquí el alma recuerda su misión\ny se funde con el cielo interior y exterior.",
+    sacral_chakra: "Chakra Sacro Terrestre\nCuna de la existencia, agua sagrada que despierta la sabiduría ancestral.\nDespierta con el corazón tu potencial dormido.\nDeja que flote tu espíritu en el amor de los ancestros.",
+    plexus_chakra: "Chakra Plexo Solar Terrestre\nRoca viva que pulsa con el latido del sueño primordial.\nLa tierra roja, gris, ocre canta memorias antiguas en tonalidades armoniosas.\nCamina en silencio y escucha el sueño del mundo.",
+    heart_chakra: "Chakra Corazón Terrestre\nEntre nieblas y campanas, el velo entre mundos se abre.\nEscucha el llamado del espíritu que retorna al uno\ndonde la tierra susurra al espíritu.",
+    throat_chakra: " Chakra laríngeo terrestre\nBajo las estrellas eternas, el cosmos manifestado talló en piedra con manos de tiempo la Piedra\npara que los vientos que la besan revelaran el orden divino.\ntoma un momento para respirar en la geometría del alma.",
+    third_eye_chakra: "Chakra Tercer Ojo Terrestre\nBelleza inmaculada, fuego sagrado que enciende la conciencia\ndesde las entrañas del universo.\nEl volcán despierta tu fuerza y eleva tu alma.",
+    crown_chakra: "Chakra Coronario Terrestre\nEje del mundo, donde el silencio abraza lo divino\nEn el trono del silencio, la mente se disuelve.\nLa montaña te mira y te recuerda quién eres.",
+    forest: "Todo lo que vive, respira contigo.\n Entre hojas y raíces, el bosque murmura\n en lenguajes antiguos. Cada árbol tiene una historia, cada sombra una enseñanza.\n Respira profundo y recuerda: tú también formas parte de esta danza verde que nutre la tierra.",
+    beach: "Siente el pulso del mar en tu interior.\n La arena no se aferra al agua, la deja ir con cada ola que se retira.\n Así también puedes soltar lo que ya no sirve. Que tu respiración fluya como la brisa salada: suave, constante, liberadora.",
+    mountain: "En la altura, el silencio se vuelve sabiduría.\n La quietud de la montaña no es ausencia de movimiento, sino presencia plena. Escucha lo que el viento susurra entre las piedras.",
+    space: "Eres polvo de estrellas... y luz también.\n Tu conciencia es un universo en expansión.\n Permite que la mente flote sin rumbo, sin juicio, simplemente siendo la inmensidad del espacio inundado de estrellas y planetas"
   };
 
   useEffect(() => {
@@ -231,9 +231,9 @@ function MeditationSessionPage() {
             </div>
 
             <div style={styles.selectionCard}>
-              <h2>¿Sabías que la Tierra también tiene puntos específicos superenergéticos parecidos a lo que conocemos como chakras?<br /><br />
-              SELECCIONA UN DESTINO PARA LA SESIÓN:<br />
-                    Aquí puedes elegir meditar en uno de esos puntos mágicos o simplemente en un destino natural de tu elección que te transporte a un lugar de paz.
+              <h2>SELECCIONA UN DESTINO PARA LA SESIÓN:<br />¿Sabías que la Tierra también tiene puntos superenergéticos específicos <br /> parecidos a lo que conocemos como chakras?<br />
+                    <br />Aquí puedes elegir meditar en uno de esos puntos mágicos o simplemente <br /> un destino natural de tu elección que te transportará a un lugar de paz.
+
                 </h2>
                 <div style={styles.habitatOptions}>
                 {['base_chakra', 'sacral_chakra', 'plexus_chakra', 'heart_chakra', 'throat_chakra',
@@ -283,13 +283,13 @@ function MeditationSessionPage() {
                     </div>
 
                     <p style={styles.habitatName}>
-                      {hab === 'base_chakra' && 'Chakra Base Terrestre'}
-                      {hab === 'sacral_chakra' && 'Chakra Sacro Terrestre'}
-                      {hab === 'plexus_chakra' && 'Chakra Plexo Solar Terrestre'}
-                      {hab === 'heart_chakra' && 'Chakra Corazón Terrestre'}
-                      {hab === 'throat_chakra' && 'Chakra Laríngeo Terrestre'}
-                      {hab === 'third_eye_chakra' && 'Chakra Tercer Ojo Terrestre'}
-                      {hab === 'crown_chakra' && 'Chakra Coronario Terrestre'}
+                      {hab === 'base_chakra' && 'Monte Shasta'}
+                      {hab === 'sacral_chakra' && 'Lago Titicaca'}
+                      {hab === 'plexus_chakra' && 'Monte Uluru'}
+                      {hab === 'heart_chakra' && 'Glastonbury'}
+                      {hab === 'throat_chakra' && 'Meseta de Giza'}
+                      {hab === 'third_eye_chakra' && 'Monte Gunung Agung'}
+                      {hab === 'crown_chakra' && 'Monte Kailash'}
                       {hab === 'forest' && 'Bosque Vivo'}
                       {hab === 'beach' && 'Playa Fresca'}
                       {hab === 'mountain' && 'Montaña Mistica'}
@@ -358,7 +358,7 @@ function MeditationSessionPage() {
            {/*Aquí insertas el mensaje de transición */}
            {hearts.length > 0 && (
              <p style={{ color: '#5a32a8', marginTop: '1rem', fontSize: '1.1rem' }}>
-               ✨ Bien hecho. Regresando...
+               //✨ Bien hecho. Regresando...
              </p>
            )}
 
@@ -393,13 +393,15 @@ const styles = {
     color: '#5a32a8',
     marginTop: '0.2rem',
     fontSize: '1.4rem',
-    textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.3)',
     position: 'relative',
     top: '0.5rem',
   },
   habitatPreview: {
     //marginTop: "0rem",
-    margin: '0.5rem 0',
+    //margin: '0.5rem 0',
+    //width: "70%",
+    //height: "100%";
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -409,7 +411,7 @@ const styles = {
     width: '85%',
     height: '390px',
     borderRadius: '12px',
-    backgroundSize: 'fixed',
+    backgroundSize: 'cover',
     backgroundPosition: '50% 55%' ,// 'center',
     position: 'relative',
     overflow: 'hidden',
@@ -435,7 +437,7 @@ const styles = {
   },
   previewAvatar: {
     position: 'absolute',
-    bottom: '20px',
+    bottom: '25px',
     left: '50%',
     transform: 'translateX(-50%)',
     width: '180px',
@@ -445,14 +447,16 @@ const styles = {
   },
   selectionCard: {
     textAlign: 'center',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.2)',
+    fontSize: '0.95rem',
     backgroundColor: '#f8f9fa',
     borderRadius: '12px',
-    padding: '1rem',
+    padding: '0.1rem',
     margin: '1.5rem auto',
+    backgroundColor: "rgba(255, 245, 238, 0.40)",
     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
     maxWidth: '1000px',
-    marginTop: "0.5rem",
-
+    marginTop: "0.3rem",
   },
   habitatOptions: {
     display: 'flex',
@@ -512,16 +516,19 @@ const styles = {
     fontWeight: 'bold',
     minWidth: '100px',
     textAlign: 'center',
-    color: '#5a32a8'
+    color: '#5a32a8',
   },
   habitatInspiration: {
-      marginTop: '-25rem',
-      fontSize: '1.2rem',
-      color: '#555',
-      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      marginTop: '-17rem',
+      textAlign: 'center',
+      fontSize: '1.5rem',
+      color: '#12090E',
+      backgroundColor: 'rgba(255, 255, 255, 0.3)',
       padding: '1rem',
       borderRadius: '10px',
-      maxWidth: '600px'
+      maxWidth: '550px',
+      whiteSpace: 'pre-line',
+      //backdropFilter: 'blur(4px)' // Efecto de vidrio esmerilado
   },
   startButton: {
     padding: '15px 40px',
