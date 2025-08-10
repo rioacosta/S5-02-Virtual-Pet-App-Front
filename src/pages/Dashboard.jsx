@@ -63,14 +63,14 @@ if (paramUsername) {
     .catch(err => console.error("Error al cargar perfil de la usuaria:", err));
   } else {
     // 🧘 Usuario logueado viendo su propio perfil
-    fetch("${apiUrl}/api/users/me", {
+    fetch(`${apiUrl}/api/users/me`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
       .then(data => setUserData(data))
       .catch(err => console.error("Error al cargar usuaria:", err));
 
-    fetch("${apiUrl}/api/users/buddys", {
+    fetch(`${apiUrl}/api/users/buddys`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -115,7 +115,7 @@ const handleUserUpdate = async () => {
   }
 
   try {
-    const response = await fetch("${apiUrl}/api/users/update", {
+    const response = await fetch(`${apiUrl}/api/users/update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
