@@ -7,6 +7,7 @@ import { isTokenExpired } from "../utils/authUtils";
 import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState("");

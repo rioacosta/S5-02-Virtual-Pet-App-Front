@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 
 const CreateBuddyPage = () => {
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
   const userId = localStorage.getItem('userId');
   const [buddyName, setBuddyName] = useState('');
   const [selectedBuddy, setSelectedBuddy] = useState(null);
@@ -40,7 +41,7 @@ const CreateBuddyPage = () => {
     try {
       const token = localStorage.getItem('token');
 
-      const response = await fetch('http://localhost:8080/api/buddys/create', {
+      const response = await fetch('${apiUrl}/api/buddys/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -5,6 +5,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function BuddyDetailPage() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { id } = useParams();
   const navigate = useNavigate();
   const [buddy, setBuddy] = useState(null);
@@ -21,7 +22,7 @@ function BuddyDetailPage() {
 // Cargar datos del buddy
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:8080/api/buddys/${id}`, {
+    fetch(`${apiUrl}/api/buddys/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -42,7 +43,7 @@ useEffect(() => {
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:8080/api/buddys/${id}/history`, {
+      const response = await axios.get(`${apiUrl}/api/buddys/${id}/history`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -63,7 +64,7 @@ useEffect(() => {
   // Manejar edición del nombre
   const handleNameUpdate = () => {
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:8080/api/buddys/${id}`, {
+    fetch(`${apiUrl}/api/buddys/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +84,7 @@ useEffect(() => {
   const handleHug = () => {
     const token = localStorage.getItem('token');
 
-    fetch(`http://localhost:8080/api/buddys/${id}/hug`, {
+    fetch(`${apiUrl}/api/buddys/${id}/hug`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -110,7 +111,7 @@ useEffect(() => {
   const handleDeleteBuddy = () => {
     const token = localStorage.getItem('token');
 
-    fetch(`http://localhost:8080/api/buddys/${id}`, {
+    fetch(`${apiUrl}/api/buddys/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     })

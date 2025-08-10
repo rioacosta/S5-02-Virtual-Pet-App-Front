@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { isTokenExpired } from "../utils/authUtils";
 
 export default function Dashboard() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [buddy, setBuddy] = useState([]);
   const [totalMinutes, setTotalMinutes] = useState(0);
   const [userData, setUserData] = useState(null);
@@ -44,7 +45,7 @@ useEffect(() => {
 
 if (paramUsername) {
   // 👑 Modo admin viendo el perfil de otro usuario
-  fetch(`http://localhost:8080/api/admin/users/${paramUsername}`, {
+  fetch(`${apiUrl}/api/admin/users/${paramUsername}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
     .then(res => res.json())
@@ -62,14 +63,14 @@ if (paramUsername) {
     .catch(err => console.error("Error al cargar perfil de la usuaria:", err));
   } else {
     // 🧘 Usuario logueado viendo su propio perfil
-    fetch("http://localhost:8080/api/users/me", {
+    fetch("${apiUrl}/api/users/me", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
       .then(data => setUserData(data))
       .catch(err => console.error("Error al cargar usuaria:", err));
 
-    fetch("http://localhost:8080/api/users/buddys", {
+    fetch("${apiUrl}/api/users/buddys", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -114,7 +115,7 @@ const handleUserUpdate = async () => {
   }
 
   try {
-    const response = await fetch("http://localhost:8080/api/users/update", {
+    const response = await fetch("${apiUrl}/api/users/update", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -159,7 +160,7 @@ const handlePasswordChange = async () => {
 
   const token = localStorage.getItem('token');
   try {
-    await fetch(`http://localhost:8080/api/users/change-password?oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`, {
+    await fetch(`${apiUrl}/api/users/change-password?oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -196,7 +197,7 @@ const handlePasswordChange = async () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/api/users/delete/${userData.username}`, {
+      const response = await fetch(`${apiUrl}/api/users/delete/${userData.username}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`

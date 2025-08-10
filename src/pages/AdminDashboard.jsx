@@ -30,6 +30,7 @@ import {
 
 
 export default function AdminDashboard() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const [newAdmin, setNewAdmin] = useState({

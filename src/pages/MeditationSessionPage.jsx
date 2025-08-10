@@ -13,6 +13,7 @@ function getAvatarByLevel(buddy) {
 }
 
 function MeditationSessionPage() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { buddyId } = useParams();
   const [buddy, setBuddy] = useState(null);
   const [habitat, setHabitat] = useState('space');
@@ -23,6 +24,7 @@ function MeditationSessionPage() {
   const [hearts, setHearts] = useState([]);
   const startSound = new Audio('/assets/sounds/ending-sound.mp3');
   const endSound = new Audio('/assets/sounds/ending-sound.mp3');
+
 
 
   const habitatIcon = {
@@ -78,7 +80,7 @@ function MeditationSessionPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:8080/api/buddys/${buddyId}`, {
+    fetch(`${apiUrl}/api/buddys/${buddyId}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -143,7 +145,7 @@ function MeditationSessionPage() {
     const token = localStorage.getItem('token');
 
     try {
-      await fetch(`http://localhost:8080/api/buddys/${buddyId}/meditate`, {
+      await fetch(`${apiUrl}/api/buddys/${buddyId}/meditate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

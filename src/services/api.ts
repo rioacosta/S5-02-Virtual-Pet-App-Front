@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-baseURL: process.env.REACT_APP_API_BASE_URL});
+baseURL: import.meta.env.VITE_API_BASE_URL});
 
 // Interceptor para añadir token JWT a cada solicitud
 api.interceptors.request.use(
