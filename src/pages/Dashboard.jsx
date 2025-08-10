@@ -270,7 +270,7 @@ const handlePasswordChange = async () => {
             padding: '1rem',
             borderRadius: '10px',
           }}>
-            🌟 Bienvenida a Meditation Buddys tu refugio virtual de calma y conexión, donde la calma interior se encuentra con la aventura virtual. Crea tu mascota espiritual única y acompáñala en viajes meditativos a los lugares más sagrados y energéticos del planeta.
+            🌟 Bienvenida a Meditation Buddys tu espacio virtual de conexión, donde la calma interior se encuentra con la aventura en lugares sagrados. Crea tu mascota espiritual única y acompáñala en viajes meditativos a diferentes lugares energéticos del planeta.
             Esta app está diseñada para ayudarte a cultivar la atención plena, establecer rutinas de autocuidado y compartir momentos zen con tus buddies.
           </p>
         </div>
