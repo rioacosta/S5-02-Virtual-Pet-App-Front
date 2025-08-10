@@ -5,7 +5,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function BuddyDetailPage() {
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
   const { id } = useParams();
   const navigate = useNavigate();
   const [buddy, setBuddy] = useState(null);

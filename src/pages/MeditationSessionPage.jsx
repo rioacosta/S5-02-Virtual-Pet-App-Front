@@ -13,7 +13,7 @@ function getAvatarByLevel(buddy) {
 }
 
 function MeditationSessionPage() {
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
   const { buddyId } = useParams();
   const [buddy, setBuddy] = useState(null);
   const [habitat, setHabitat] = useState('space');

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 const CreateBuddyPage = () => {
   const navigate = useNavigate();
-  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+  const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
   const userId = localStorage.getItem('userId');
   const [buddyName, setBuddyName] = useState('');
   const [selectedBuddy, setSelectedBuddy] = useState(null);
