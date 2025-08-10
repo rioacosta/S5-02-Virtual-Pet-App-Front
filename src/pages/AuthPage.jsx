@@ -83,6 +83,7 @@ useEffect(() => {
       }
     } catch (err) {
       setError(err.message || "Ocurrió un error");
+      toast.error("Error al hacer login, credenciales incorrectas")
     }
   };
 

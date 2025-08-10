@@ -125,6 +125,7 @@ const handleUserUpdate = async () => {
 
     if (!response.ok) {
       throw new Error("No se pudo actualizar la usuaria");
+      toast.error("No se pudo actualizar la usuaria");
     }
 
     const result = await response.json();
@@ -141,12 +142,12 @@ const handleUserUpdate = async () => {
       alert("✅ Datos actualizados");
       window.location.reload();
     } else {
-      alert("⚠️ No se recibió un nuevo token");
+      console.alert("⚠️ No se recibió un nuevo token");
     }
 
   } catch (err) {
     console.error("Error actualizando datos:", err);
-    alert("❌ Error al actualizar");
+    toast.error("❌ Error al actualizar");
   }
 };
 
