@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { isTokenExpired } from "../utils/authUtils";
 
 export default function Dashboard() {
-  const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;// || "http://localhost:8080";
   const [buddy, setBuddy] = useState([]);
   const [totalMinutes, setTotalMinutes] = useState(0);
   const [userData, setUserData] = useState(null);
