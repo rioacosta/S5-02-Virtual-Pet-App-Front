@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from './api';
 
 function BuddyDetailPage() {
   const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
@@ -43,7 +43,7 @@ useEffect(() => {
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${apiUrl}/api/buddys/${id}/history`, {
+      const response = await api.get(`${apiUrl}/api/buddys/${id}/history`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
