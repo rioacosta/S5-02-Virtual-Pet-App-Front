@@ -23,8 +23,16 @@ export async function register(userData) {
   });
 
   if (!response.ok) {
-    throw new Error("Registration failed");
+    // Si es 400 con validaciones, el backend devuelve un objeto con campos
+    if (response.status === 400 && data && typeof data === "object") {
+      throw { type: "validation", errors: data };
+    }
+    // Otro tipo de error
+    throw new Error(data?.message || "Registration failed");
   }
+
+  return data;
+}
 
   const text = await response.text();
   try {

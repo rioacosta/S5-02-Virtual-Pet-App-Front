@@ -77,16 +77,28 @@ useEffect(() => {
           }
         }, 1000);
 
-      } else {
-        await register(form);
-        toast.success("Registro alineado, ${username}. Ahora puedes iniciar sesión.");
-        setIsLogin(true);
-      }
-    } catch (err) {
-      setError(err.message || "Ocurrió un error");
-      toast.error("Error al hacer login, credenciales incorrectas")
-    }
-  };
+        } else {
+              try {
+                await register(form);
+                toast.success(`Registro alineado, ${form.username}. Ahora puedes iniciar sesión.`);
+                setIsLogin(true);
+              } catch (err) {
+                if (err.type === "validation") {
+                  // err.errors: { password: "Password should have at least 6 characters" }
+                  const mensajes = Object.values(err.errors).join("\n");
+                  setError(mensajes);
+                  toast.error(mensajes);
+                } else {
+                  setError(err.message || "Ocurrió un error en el registro");
+                  toast.error(err.message || "Ocurrió un error en el registro");
+                }
+              }
+            }
+          } catch (err) {
+            setError(err.message || "Ocurrió un error");
+            toast.error(err.message || "Ocurrió un error");
+          }
+        };
 
   return (
     <div
