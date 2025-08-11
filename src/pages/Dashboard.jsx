@@ -176,7 +176,7 @@ const handlePasswordChange = async () => {
       const index = Math.min((buddy.level || 1) - 1, buddy.avatarStages.length - 1);
       const stage = buddy.avatarStages[index];
       if (stage) {
-        console.log(`🐾 Mostrando stage: ${stage}`);
+        //console.log(`🐾 Mostrando stage: ${stage}`);
         return stage;
       }
     }
