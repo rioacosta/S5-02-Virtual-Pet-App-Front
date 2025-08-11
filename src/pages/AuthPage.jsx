@@ -84,7 +84,7 @@ useEffect(() => {
                 setIsLogin(true);
               } catch (err) {
                 if (err.type === "validation") {
-                  // err.errors: { password: "Password should have at least 6 characters" }
+                  err.errors: { password: "Password should have at least 6 characters" }
                   const mensajes = Object.values(err.errors).join("\n");
                   setError(mensajes);
                   toast.error(mensajes);
