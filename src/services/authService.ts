@@ -12,7 +12,7 @@ export async function login(username, password) {
     throw new Error("Login failed");
   }
 
-  return response.json();
+  return await parseResponse(response);
 }
 
 export async function register(userData) {
@@ -21,6 +21,8 @@ export async function register(userData) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
   });
+
+ const data = await parseResponse(response);
 
   if (!response.ok) {
     // Si es 400 con validaciones, el backend devuelve un objeto con campos
@@ -34,6 +36,8 @@ export async function register(userData) {
   return data;
 }
 
+// ✅ Esta función encapsula el parseo seguro del response
+async function parseResponse(response) {
   const text = await response.text();
   try {
     return JSON.parse(text);
@@ -41,6 +45,6 @@ export async function register(userData) {
     console.warn("Respuesta no es JSON válido:", text);
     return {};
   }
-
+}
 
 
