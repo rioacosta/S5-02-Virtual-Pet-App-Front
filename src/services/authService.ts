@@ -42,6 +42,5 @@ export async function register(userData) {
     return {};
   }
 
-}
 
 

@@ -70,7 +70,7 @@ useEffect(() => {
 
           if (Array.isArray(roles) && roles.includes("ROLE_ADMIN")) {
             toast.info("Redirigiendo al panel de administrador 🛠️");
-            window.location.href = "/admin";  // Cambio a navegación forzada 
+            window.location.href = "/admin";  // Cambio a navegación forzada
           } else {
             //toast.info("Redirigiendo al panel de usuario 🧘");
             navigate("/dashboard");
