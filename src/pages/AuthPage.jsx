@@ -66,11 +66,11 @@ useEffect(() => {
         toast.success("Login exitoso");
 
         setTimeout(() => {
-          console.log("Roles:", roles); // 👈 Verificación antes de navegar
+          console.log("Roles:", roles); // 👈 Verificación
 
           if (Array.isArray(roles) && roles.includes("ROLE_ADMIN")) {
             toast.info("Redirigiendo al panel de administrador 🛠️");
-            window.location.href = "/admin";  // Cambio a navegación forzada para refrescar estado
+            window.location.href = "/admin";  // Cambio a navegación forzada 
           } else {
             //toast.info("Redirigiendo al panel de usuario 🧘");
             navigate("/dashboard");
