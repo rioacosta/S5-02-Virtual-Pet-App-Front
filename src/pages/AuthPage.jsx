@@ -100,117 +100,76 @@ useEffect(() => {
           }
         };
 
-  return (
+return (
+  <div
+    style={{
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "1rem",
+    }}
+  >
+    {/* TÍTULO */}
+    <img
+      src="/assets/title31.png"
+      alt="Logo de la app"
+      style={{
+        maxWidth: "90%",
+        height: "auto",
+        marginBottom: "1.5rem",
+      }}
+    />
+
+    {/* FORMULARIO */}
     <div
       style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "fixed",
-        backgroundPosition: "center",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "left",
-        alignItems: "flex-start", // <-- Esto lo pega arriba
-        top: "-190px",           // Distancia desde arriba (puedes ajustar)
-        padding: "4rem",
-        }}
+        background: "rgba(255, 245, 238, 0.6)",
+        padding: "2rem",
+        borderRadius: "12px",
+        width: "100%",
+        maxWidth: "320px",
+        textAlign: "center",
+        boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+      }}
     >
+      <h2 style={{ color: "#4169E1" }}>
+        {isLogin ? "Iniciar sesión" : "Registrarse"}
+      </h2>
 
-      <img
-         src="/assets/title31.png" // Cambialo al nombre real de tu logo
-         alt="Logo de la app"
-         style={{
-           position: "absolute",
-           top: "-230px",           // Distancia desde arriba (puedes ajustar)
-           left: "50%",
-           transform: "translateX(-50%)",
-           width: "520px",        // Ajustá tamaño
-           zIndex: 2,
-           pointerEvents: "none"  // Permite clickear lo que está debajo
-         }}
-       />
-
-      <div
-        style={{
-          background:  "rgba(255, 245, 238, 0.50)",
-          padding: "2rem",
-          borderRadius: "12px",
-          width: "100%",
-          maxWidth: 300,
-          textAlign: "center",
-          marginTop: '150px'
-
-        }}
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
       >
-        <h2 style={{ color: "#4169E1" }}>
-          {isLogin ? "Iniciar sesión" : "Registrarse"}
-        </h2>
-
-        {logoutMessage && (
-          <div
-            style={{
-              background: "#dff0d8",
-              color: "#3c763d",
-              padding: "1rem",
-              borderRadius: "8px",
-              marginBottom: "1rem",
-              fontWeight: "bold",
-              textAlign: "center",
-              opacity: logoutMessage ? 1 : 0,
-              transition: "opacity 0.6s ease-in-out"
-            }}
-          >
-            {logoutMessage}
-          </div>
+        <input name="username" placeholder="Usuario" value={form.username} onChange={handleChange} required/>
+        {!isLogin && (
+          <input name="email" placeholder="Correo" value={form.email} onChange={handleChange} required/>
         )}
+        <input name="password" type="password" placeholder="Contraseña" value={form.password} onChange={handleChange} required/>
+        <button type="submit">{isLogin ? "Entrar" : "Registrarse"}</button>
+      </form>
 
-        <form
-          onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <p>
+        {isLogin ? "¿No tienes cuenta?" : "¿Ya tienes cuenta?"}{" "}
+        <button
+          onClick={() => setIsLogin(!isLogin)}
+          style={{
+            background: "none",
+            border: "none",
+            color: "#1E90FF",
+            cursor: "pointer"
+          }}
         >
-          <input
-            name="username"
-            placeholder="Usuario"
-            value={form.username}
-            onChange={handleChange}
-            required
-          />
-          {!isLogin && (
-            <input
-              name="email"
-              placeholder="Correo"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
-          )}
-          <input
-            name="password"
-            type="password"
-            placeholder="Contraseña"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-          <button type="submit">{isLogin ? "Entrar" : "Registrarse"}</button>
-        </form>
-
-        {error && <p style={{ color: "red" }}>{error}</p>}
-
-        <p>
-          {isLogin ? "¿No tienes cuenta?" : "¿Ya tienes cuenta?"}{" "}
-          <button
-            onClick={() => setIsLogin(!isLogin)}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#1E90FF",
-              cursor: "pointer"
-            }}
-          >
-            {isLogin ? "Registrarse" : "Iniciar sesión"}
-          </button>
-        </p>
-      </div>
+          {isLogin ? "Registrarse" : "Iniciar sesión"}
+        </button>
+      </p>
     </div>
-  );
+  </div>
+);
 }
