@@ -278,15 +278,19 @@ const handlePasswordChange = async () => {
 
         {isOwnProfile && (
           <>
-            <button onClick={handleLogout} style={styles.logoutButton}>🔒 Cerrar sesión</button>
+            <button onClick={handleLogout} style={styles.logoutButton}>
+              🔒 Cerrar sesión
+            </button>
+
             <button
               onClick={() => setShowEditPanel(prev => !prev)}
-              style={{ ...styles.logoutButton, top: '65px', backgroundColor: '#4CAF50' }}
+              style={styles.editButton}
             >
               ⚙️ Editar Perfil
             </button>
           </>
         )}
+
 
         {showEditPanel && (
           <div style={{
@@ -487,18 +491,31 @@ const styles = {
     margin: "0.5rem 0",
   },
   logoutButton: {
-    position: 'absolute',
-    top: '20px',
-    right: '20px',
-    marginBottom: "1.5rem",
-    padding: "10px 20px",
-    backgroundColor: "#FF6666",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: "bold",
-  },
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      padding: "10px 20px",
+      backgroundColor: "#FF6666",
+      color: "white",
+      border: "none",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontWeight: "bold",
+      zIndex: 1000,
+    },
+    editButton: {
+      position: "fixed",
+      bottom: "70px",
+      right: "20px",
+      padding: "10px 20px",
+      backgroundColor: "#4CAF50",
+      color: "white",
+      border: "none",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontWeight: "bold",
+      zIndex: 1000,
+    },
   createButton: {
     position: "relative",
     //top: "70%",
