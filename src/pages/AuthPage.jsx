@@ -111,19 +111,22 @@ return (
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      padding: "1rem",
+      padding: "0.5rem",
     }}
   >
     {/* TÍTULO */}
-    <img
-      src="/assets/title31.png"
-      alt="Logo de la app"
-      style={{
-        maxWidth: "90%",
-        height: "auto",
-        marginBottom: "1.5rem",
-      }}
-    />
+        <img
+          src="/assets/title31.png"
+          alt="Logo de la app"
+          style={{
+            maxWidth: "90%",
+            height: "auto",
+            marginBottom: "1.5rem",
+            filter: "drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5))",
+            transform: "perspective(1000px) rotateX(5deg)",
+            transition: "all 0.4s ease",
+          }}
+        />
 
     {/* FORMULARIO */}
     <div
